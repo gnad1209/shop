@@ -6,6 +6,8 @@ import slider1 from '../../assests/images/Slider1.jpg'
 import slider2 from '../../assests/images/Slider2.jpg'
 import slider3 from '../../assests/images/Slider3.jpg'
 import CardComponent from '../../Components/CardComponent/CardComponent'
+import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent'
+import ButtonComponent from '../../Components/ButtonComponent/ButtonComponent'
 
 const HomePage = () => {
     const arr = ['Nike', 'Vans', 'Owen', 'Converse']
@@ -27,6 +29,7 @@ const HomePage = () => {
                 <div style={{ marginTop: `20px`, display: `flex`, alignItems: `center`, gap: `20px` }}>
                     <CardComponent />
                 </div>
+                <ButtonComponent textButton='Xem them' type='outline' />
             </div>
         </>
     )
