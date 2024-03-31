@@ -1,7 +1,7 @@
-import HomePage from '../pages/HomePage/HomePages'
-import NotFoundPage from '../pages/NotFoundPage/NotFoundPage'
-import OrderPage from '../pages/OrderPage/OrderPage'
-import ProductsPage from '../pages/ProductsPage/ProductsPage'
+import HomePage from '../Pages/HomePage/HomePage'
+import OrderPage from '../Pages/OrderPage/OrderPage'
+import ProductsPage from '../Pages/ProductsPage/ProductsPage'
+import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 
 export const routes = [
     {
