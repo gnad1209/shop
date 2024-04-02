@@ -55,7 +55,7 @@ const NavbarComponent = () => {
             <WrapperContent>
                 {renderContent('text', ['vans', 'converse', 'owen'])}
             </WrapperContent>
-            <WrapperContent>
+            {/* <WrapperContent>
                 {renderContent('checkbox', [
                     { value: 'a', lable: 'A' },
                     { value: 'b', lable: 'B' },
@@ -67,7 +67,7 @@ const NavbarComponent = () => {
             </WrapperContent>
             <WrapperContent>
                 {renderContent('price', ['dưới 40.000', 'trên 50.000'])}
-            </WrapperContent>
+            </WrapperContent> */}
         </div>
     )
 }
