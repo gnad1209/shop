@@ -1,4 +1,4 @@
-import { Col, Image, InputNumber, Row } from 'antd'
+import { Col, Image, Row } from 'antd'
 import React from 'react'
 import imageProduct from '../../assests/images/test.webp'
 import imageSmall from '../../assests/images/imagesmall.webp'
@@ -65,7 +65,6 @@ return (
             <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
                 <ButtonComponent 
                     size={40}
-                    bordered={false}
                     styleButton={{ 
                         backgroundColor: 'rgb(255,57,69)',
                         height:'48px',
@@ -78,7 +77,6 @@ return (
                 </ButtonComponent>
                 <ButtonComponent 
                     size={40}
-                    bordered={false}
                     styleButton={{ 
                         backgroundColor: '#fff',
                         height:'48px',
