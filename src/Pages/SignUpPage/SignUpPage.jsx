@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style'
 import InputForm from '../../Components/InputForm/InputForm'
 import ButtonComponent from '../../Components/ButtonComponent/ButtonComponent'
@@ -7,12 +7,31 @@ import imageLogo from '../../assests/images/logo-login.png'
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import * as UserService from '../../service/UserService'
+import Loading from '../../Components/LoadingComponent/Loading'
+import { useMutationHooks } from '../../hooks/useMutationHook'
+import * as message from '../../Components/Message/Message'
 
 const SignUpPage = () => {
   const navigate = useNavigate()
     const handleNavigateLogin = () => {
         navigate('/sign-in')
     }
+
+  const mutation = useMutationHooks(
+    data => UserService.signUpUser(data)
+  )
+
+  const { data, isPending, isSuccess, isError } = mutation
+
+  useEffect(() => {
+    if (isSuccess) {
+      message.success()
+      handleNavigateLogin()
+    } else if (isError) {
+      message.error()
+    }
+  }, [isSuccess, isError])
   const [isShowPassword, setIsShowPassword] = useState(false)
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false)
   const [email, setEmail] = useState('');
@@ -33,7 +52,9 @@ const SignUpPage = () => {
   }
 
   const handleSignUp = () => {
-    console.log({ email, password, confirmPassword })
+    mutation.mutate({
+      email, password, confirmPassword
+    })
   }
 
   return (
@@ -79,14 +100,16 @@ const SignUpPage = () => {
                 )
               }
             </span>
-            <InputForm placeholder="comfirm password" type={isShowPassword ? "text" : "password"} value={confirmPassword} onChange={handleOnchangeConfirmPassword}/>
+            <InputForm placeholder="comfirm password" type={isShowConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={handleOnchangeConfirmPassword}/>
           </div>
+          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
+          <Loading isLoading={isPending}>
           <ButtonComponent
               disabled={!email.length || !password.length || !confirmPassword.length}
               onClick={handleSignUp}
               size={40}
               styleButton={{ 
-                  backgroundColor: 'rgb(255,57,69)',
+                  background: 'rgb(255,57,69)',
                   height:'48px',
                   width:'220px',
                   border:'none',
@@ -96,6 +119,7 @@ const SignUpPage = () => {
               textButton={"Đăng ký"}
               styleTextButton={{ color: "#fff",fontSize:'15px',fontWeight:'700' }}>
           </ButtonComponent>
+          </Loading>
           <p>Bạn đã có tài khoản? <WrapperTextLight  onClick={handleNavigateLogin} style={{cursor:'pointer'}}>Đăng nhập</WrapperTextLight></p>
         </WrapperContainerLeft>
         <WrapperContainerRight>
