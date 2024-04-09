@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import TypeProducts from '../../Components/TypeProducts/TypeProducts'
 import { WrapperButtonMore, WrapperProducts, WrapperTypeProduct } from './style'
 import SliderComponent from '../../Components/SliderComponent/SliderComponent'
@@ -6,9 +6,22 @@ import slider1 from '../../assests/images/Slider1.jpg'
 import slider2 from '../../assests/images/Slider2.jpg'
 import slider3 from '../../assests/images/Slider3.jpg'
 import CardComponent from '../../Components/CardComponent/CardComponent'
-
+import * as ProductService from '../../service/ProductService'
+import { useQuery } from '@tanstack/react-query'
+import { useSelector } from 'react-redux'
+import { useDebounce } from '../../hooks/useDebounce'
 const HomePage = () => {
     const arr = ['Nike', 'Vans', 'Owen', 'Converse']
+
+    // const searchProduct = useSelector((state) => state?.product?.search)
+    // const searchDebounce = useDebounce(searchProduct, 500)
+    // const [loading, setLoading] = useState(false)
+    // const [limit, setLimit] = useState(6)
+    // const [typeProducts, setTypeProducts] = useState([])
+
+    const fetchProductAll = async () => {
+        await ProductService.getAllProduct()
+    }
     return (
         <>
             <div style={{ width: '1270px', margin: '0 auto' }}>

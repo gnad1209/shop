@@ -2,7 +2,7 @@ import React from 'react'
 
 const TypeProducts = ({ name }) => {
     return (
-        <div>{name}</div>
+        <div style={{fontSize:'14px'}}>{name}</div>
     )
 }
 

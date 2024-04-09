@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style'
 import InputForm from '../../Components/InputForm/InputForm'
 import ButtonComponent from '../../Components/ButtonComponent/ButtonComponent'
@@ -7,15 +7,47 @@ import imageLogo from '../../assests/images/logo-login.png'
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import * as UserService from '../../service/UserService'
+import { useMutationHooks } from '../../hooks/useMutationHook'
+import Loading from '../../Components/LoadingComponent/Loading'
+import { jwtDecode } from "jwt-decode";
+import { useDispatch } from 'react-redux'
+import { updateUser } from '../../redux/slide/userSlide'
 
 const SignInPage = () => {
-  const navigate = useNavigate()
-    const handleNavigateLogin = () => {
-        navigate('/sign-up')
-    }
   const [isShowPassword, setIsShowPassword] = useState(false)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch()
+
+  const navigate = useNavigate()
+    const handleNavigateSignUp = () => {
+        navigate('/sign-up')
+    }
+
+  const mutation = useMutationHooks(
+    data => UserService.loginUser(data)
+  )
+
+  const { data, isPending, isSuccess } = mutation
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/')
+      localStorage.setItem('access_token',JSON.stringify(data?.access_token))
+      if(data?.access_token){
+        const decoded = jwtDecode(data?.access_token);
+        if(decoded?.id){
+          handleGetDetailUser(decoded?.id,data?.access_token)
+        }
+      }
+    }
+  }, [isSuccess])
+
+  const handleGetDetailUser = async (id,token) => {
+    const res = await UserService.getDetailUser(id,token)
+    dispatch(updateUser({...res?.data,access_token: token}))
+  }
 
   const handleOnchangeEmail = (value) => {
     setEmail(value)
@@ -26,7 +58,9 @@ const SignInPage = () => {
   }
 
   const handleSignIn = () => {
-    console.log({ email, password })
+    mutation.mutate({
+      email, password
+    })
   }
 
   return (
@@ -59,23 +93,26 @@ const SignInPage = () => {
               value={password} onChange={handleOnchangePassword}
             />
           </div>
-          <ButtonComponent
-              disabled={!email.length || !password.length}
-              onClick={handleSignIn}
-              size={40}
-              styleButton={{ 
-                  background: 'rgb(255, 57, 69)',
-                  height: '48px',
-                  width: '100%',
-                  border: 'none',
-                  borderRadius: '4px',
-                  margin: '26px 0 10px'
-              }}
-              textButton={"Đăng nhập"}
-              styleTextButton={{ color: "#fff",fontSize:'15px',fontWeight:'700' }}>
-          </ButtonComponent>
+          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
+          <Loading isLoading={isPending}>
+            <ButtonComponent
+                disabled={!email.length || !password.length}
+                onClick={handleSignIn}
+                size={40}
+                styleButton={{ 
+                    background: 'rgb(255, 57, 69)',
+                    height: '48px',
+                    width: '100%',
+                    border: 'none',
+                    borderRadius: '4px',
+                    margin: '26px 0 10px'
+                }}
+                textButton={"Đăng nhập"}
+                styleTextButton={{ color: "#fff",fontSize:'15px',fontWeight:'700' }}>
+            </ButtonComponent>
+          </Loading>
           <p><WrapperTextLight>Quên mật khẩu?</WrapperTextLight></p>
-          <p style={{margin:0}}>Chưa có tài khoản? <WrapperTextLight  onClick={handleNavigateLogin} style={{cursor:'pointer'}}>Tạo tài khoản</WrapperTextLight></p>
+          <p style={{margin:0}}>Chưa có tài khoản? <WrapperTextLight  onClick={handleNavigateSignUp} style={{cursor:'pointer'}}>Tạo tài khoản</WrapperTextLight></p>
         </WrapperContainerLeft>
         <WrapperContainerRight>
           <Image src={imageLogo} alt={'imageLogo'} preview={false} height='203' width='203'/>

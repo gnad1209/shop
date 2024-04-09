@@ -9,6 +9,7 @@ const ButtonComponent = ({ size, styleButton, styleTextButton, textButton,disabl
                 background: disabled ? '#ccc' : styleButton.background
             }}
             size={size}
+            // style={styleButton}
             {...rests}
         >
             <span style={styleTextButton}>{textButton}</span>
