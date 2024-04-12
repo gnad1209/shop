@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { routes } from './routes'
 import DefaultComponent from './Components/DefaultComponent/DefaultComponent'
@@ -6,16 +6,17 @@ import { useQuery } from '@tanstack/react-query'
 import { isJsonString } from './ultils'
 import { jwtDecode } from "jwt-decode";
 import * as UserService from './service/UserService'
-import { useDispatch } from 'react-redux'
-import { updateUser } from './redux/slide/userSlide'
-// import Loading from './Components/LoadingComponent/Loading'
-
+import { useDispatch, useSelector } from 'react-redux'
+import Loading from './Components/LoadingComponent/Loading'
+import { resetUser, updateUser } from './redux/slide/userSlide'
 // import { config } from 'dotenv';
 // config();
 
 export function App() {
   const dispatch = useDispatch()
-  
+  const [isLoading, setIsLoading] = useState(false)
+  const user = useSelector((state) => state.user)
+
   useEffect(()=>{
     let {storageData, decoded} = handleDecoded()
         if(decoded?.id){
@@ -47,19 +48,23 @@ export function App() {
   });
 
   const handleGetDetailUser = async (id,token) => {
+    let storageRefreshToken = localStorage.getItem('refresh_token')
+    const refreshToken = JSON.parse(storageRefreshToken)
     const res = await UserService.getDetailUser(id,token)
     dispatch(updateUser({...res?.data,access_token: token}))
   }
 
   return (
-    <div>
+    <div style={{height: '100vh', width: '100%'}}>
+      <Loading isLoading={isLoading}>
       <Router>
         <Routes>
           {routes.map((route) => {
             const Page = route.page
+            // const isCheckAuth = !route.isPrivate || user.isAdmin
             const Layout = route.isShowHeader ? DefaultComponent : Fragment
             return (
-              <Route path={route.path} element={
+              <Route key={route.path} path={route.path} element={
                 <Layout>
                   <Page />
                 </Layout>
@@ -68,6 +73,7 @@ export function App() {
           })}
         </Routes>
       </Router>
+      </Loading>
     </div>
   )
 }

@@ -13,15 +13,39 @@ import { useDebounce } from '../../hooks/useDebounce'
 const HomePage = () => {
     const arr = ['Nike', 'Vans', 'Owen', 'Converse']
 
-    // const searchProduct = useSelector((state) => state?.product?.search)
-    // const searchDebounce = useDebounce(searchProduct, 500)
-    // const [loading, setLoading] = useState(false)
-    // const [limit, setLimit] = useState(6)
-    // const [typeProducts, setTypeProducts] = useState([])
+    const searchProduct = useSelector((state) => state?.product?.search)
+    const searchDebounce = useDebounce(searchProduct, 500)
+    const [loading, setLoading] = useState(false)
+    const [limit, setLimit] = useState(6)
+    const [typeProducts, setTypeProducts] = useState([])
 
-    const fetchProductAll = async () => {
-        await ProductService.getAllProduct()
-    }
+    const fetchProductAll = async (context) => {
+        const limit = context?.queryKey && context?.queryKey[1]
+        const search = context?.queryKey && context?.queryKey[2]
+        const res = await ProductService.getAllProduct(search, limit)
+    
+        return res
+    
+      }
+    
+    //   const fetchAllTypeProduct = async () => {
+    //     const res = await ProductService.getAllTypeProduct()
+    //     if(res?.status === 'OK') {
+    //       setTypeProducts(res?.data)
+    //     }
+    //   }
+    
+    const { isLoading, data: products, isPreviousData } = useQuery({
+        queryKey: ['products', limit, searchDebounce],
+        queryFn: fetchProductAll,
+        retry: 3,
+        retryDelay: 1000,
+        keepPreviousData: true
+      });
+    
+    //   useEffect(() => {
+    //     fetchAllTypeProduct()
+    //   }, [])
     return (
         <>
             <div style={{ width: '1270px', margin: '0 auto' }}>
@@ -39,17 +63,20 @@ const HomePage = () => {
                 <div id="container" style={{ height: '1000px', width: '1270px', margin: '0 auto'  }}>
                     <SliderComponent max={50} arrImages={[slider1, slider2, slider3]} />
                     <WrapperProducts>
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
+                        {products?.data?.map((product)=>{
+                            return <CardComponent 
+                            key={product._id}
+                            countInStock={product.countInStock}
+                            description={product.description}
+                            image={product.image}
+                            name={product.name}
+                            price={product.price}
+                            rating={product.rating}
+                            type={product.type}
+                            selled={product.selled}
+                            discount={product.discount}
+                            id={product._id}/>
+                        })}
                     </WrapperProducts>
                 <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center',marginTop:'10px'}}>
                     <WrapperButtonMore textButton='Xem thêm' type='outline' 
