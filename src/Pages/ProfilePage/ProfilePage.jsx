@@ -1,5 +1,4 @@
 import React,{ useEffect,useState } from 'react'
-
 import { useDispatch, useSelector } from 'react-redux'
 import ButtonComponent from '../../Components/ButtonComponent/ButtonComponent'
 import InputForm from '../../Components/InputForm/InputForm'
@@ -11,7 +10,7 @@ import * as message from '../../Components/Message/Message'
 import { updateUser } from '../../redux/slide/userSlide'
 import { Button, Upload } from 'antd'
 import { UploadOutlined} from '@ant-design/icons'
-import { getBase64 } from '../../ultils'
+import { getBase64 } from '../../utils'
 
 const ProfilePage = () => {
     const user = useSelector((state) => state.user)
