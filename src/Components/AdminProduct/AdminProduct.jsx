@@ -153,14 +153,14 @@ const AdminProduct = () => {
   }
 
   const { data, isPending, isSuccess, isError } = mutation
-  const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
-  const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDelected, isError: isErrorDeleted } = mutationDeleted
-  const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
+  const { data: dataUpdated, isPending: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
+  const { data: dataDeleted, isPending: isLoadingDeleted, isSuccess: isSuccessDelected, isError: isErrorDeleted } = mutationDeleted
+  const { data: dataDeletedMany, isPending: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
 
 
   const queryProduct = useQuery({ queryKey: ['products'], queryFn: getAllProducts })
   const typeProduct = useQuery({ queryKey: ['type-product'], queryFn: fetchAllTypeProduct })
-  const { isLoading: isLoadingProducts, data: products } = queryProduct
+  const { isPending: isLoadingProducts, data: products } = queryProduct
   const renderAction = () => {
     return (
       <div>
@@ -238,20 +238,6 @@ const AdminProduct = () => {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    // render: (text) =>
-    //   searchedColumn === dataIndex ? (
-    //     // <Highlighter
-    //     //   highlightStyle={{
-    //     //     backgroundColor: '#ffc069',
-    //     //     padding: 0,
-    //     //   }}
-    //     //   searchWords={[searchText]}
-    //     //   autoEscape
-    //     //   textToHighlight={text ? text.toString() : ''}
-    //     // />
-    //   ) : (
-    //     text
-    //   ),
   });
 
 
@@ -470,7 +456,7 @@ const AdminProduct = () => {
         <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button>
       </div>
       <div style={{ marginTop: '20px' }}>
-        <TableComponent handleDelteMany={handleDelteManyProducts} columns={columns} isLoading={isLoadingProducts} data={dataTable} onRow={(record, rowIndex) => {
+        <TableComponent handleDelteMany={handleDelteManyProducts} columns={columns} isPending={isLoadingProducts} data={dataTable} onRow={(record, rowIndex) => {
           return {
             onClick: event => {
               setRowSelected(record._id)
@@ -582,7 +568,7 @@ const AdminProduct = () => {
         </Loading>
       </ModalComponent>
       <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width="90%">
-        <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
+        <Loading isLoading={isLoadingUpdated || isLoadingUpdated}>
 
           <Form
             name="basic"
