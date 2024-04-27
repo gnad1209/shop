@@ -6,12 +6,12 @@ import { Image } from 'antd'
 import imageLogo from '../../assests/images/logo-login.png'
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import * as UserService from '../../service/UserService'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import Loading from '../../Components/LoadingComponent/Loading'
 import { jwtDecode } from "jwt-decode";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../../redux/slide/userSlide'
 
 const SignInPage = () => {
@@ -19,22 +19,26 @@ const SignInPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch()
+  const location = useLocation()
+  const user  = useSelector((state) => state.user)
+
 
   const navigate = useNavigate()
-    const handleNavigateSignUp = () => {
-        navigate('/sign-up')
-    }
-
+    
   const mutation = useMutationHooks(
     data => UserService.loginUser(data)
   )
 
   const { data, isPending, isSuccess } = mutation
-
   useEffect(() => {
     if (isSuccess) {
-      navigate('/')
+      if(location?.state) {
+        navigate(location?.state)
+      }else {
+        navigate('/')
+      }
       localStorage.setItem('access_token',JSON.stringify(data?.access_token))
+      localStorage.setItem('refresh_token', JSON.stringify(data?.refresh_token))
       if(data?.access_token){
         const decoded = jwtDecode(data?.access_token);
         if(decoded?.id){
@@ -45,8 +49,14 @@ const SignInPage = () => {
   }, [isSuccess])
 
   const handleGetDetailUser = async (id,token) => {
+    const storage = localStorage.getItem('refresh_token')
+    const refreshToken = JSON.parse(storage)
     const res = await UserService.getDetailUser(id,token)
     dispatch(updateUser({...res?.data,access_token: token}))
+  }
+
+  const handleNavigateSignUp = () => {
+    navigate('/sign-up')
   }
 
   const handleOnchangeEmail = (value) => {
