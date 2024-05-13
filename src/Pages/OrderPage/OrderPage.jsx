@@ -155,7 +155,7 @@ const OrderPage = () => {
     },
   )
 
-  const {isLoading, data} = mutationUpdate
+  const {isPending, data} = mutationUpdate
 
   const handleCancleUpdate = () => {
     setStateUserDetails({
@@ -306,7 +306,7 @@ const OrderPage = () => {
         </div>
       </div>
       <ModalComponent title="Cập nhật thông tin giao hàng" open={isOpenModalUpdateInfo} onCancel={handleCancleUpdate} onOk={handleUpdateInforUser}>
-        <Loading isLoading={isLoading}>
+        <Loading isLoading={isPending}>
         <Form
             name="basic"
             labelCol={{ span: 4 }}

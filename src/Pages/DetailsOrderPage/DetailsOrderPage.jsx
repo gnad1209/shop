@@ -21,7 +21,7 @@ const DetailsOrderPage = () => {
   }
 
   const queryOrder = useQuery({ queryKey: ['orders-details'], queryFn: fetchDetailsOrder }, {
-    enabled: id
+    // enabled: id
   })
   const { isLoading, data } = queryOrder
 

@@ -10,6 +10,6 @@ export const useDebounce = (value, delay) => {
         return () => {
             clearTimeout(handle)
         }
-    }, [value])
+    }, [value,delay])
     return valueDebounce
 }

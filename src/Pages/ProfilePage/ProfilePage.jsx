@@ -70,10 +70,11 @@ const ProfilePage = () => {
             file.preview = await getBase64(file.originFileObj );
         }
         setAvatar(file.preview)
+        console.log(file)
     }
 
     const handleUpdate = () => {
-        mutation.mutate({ id: user?.id, email, name, phone, address, avatar, access_token: user?.access_token })
+        mutation.mutate({ id: user?.id, email, name, phone,avatar, address, access_token: user?.access_token })
 
     }
   return (
