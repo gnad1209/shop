@@ -16,7 +16,7 @@ import * as message from '../../Components/Message/Message'
 import { updateUser } from '../../redux/slide/userSlide';
 import { useNavigate } from 'react-router-dom';
 import { removeAllOrderProduct } from '../../redux/slide/orderSlide';
-// import { PayPalButton } from "react-paypal-button-v2";
+import { PayPalButton } from "react-paypal-button-v2";
 import * as PaymentService from '../../service/PaymentService'
  
 const PaymentPage = () => {
@@ -141,6 +141,7 @@ const PaymentPage = () => {
   const {data: dataAdd,isPending:isLoadingAddOrder, isSuccess, isError} = mutationAddOrder
 
   useEffect(() => {
+    console.log(mutationAddOrder)
     if (isSuccess && dataAdd?.status === 'OK') {
       const arrayOrdered = []
       order?.orderItemsSlected?.forEach(element => {
@@ -299,14 +300,14 @@ const PaymentPage = () => {
               </div>
               {payment === 'paypal' && sdkReady ? (
                 <div style={{width: '320px'}}>
-                  {/* <PayPalButton
+                  { <PayPalButton
                     amount={Math.round(totalPriceMemo / 30000)}
                     // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
                     onSuccess={onSuccessPaypal}
                     onError={() => {
                       alert('Erroe')
                     }}
-                  /> */}
+                  /> }
                 </div>
               ) : (
                 <ButtonComponent

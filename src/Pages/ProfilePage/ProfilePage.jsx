@@ -64,13 +64,14 @@ const ProfilePage = () => {
         setAddress(value)
     }
 
-    const handleOnchangeAvatar = async ({fileList}) => {
-        const file = fileList[0]
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj );
-        }
-        setAvatar(file.preview)
-        console.log(file)
+    const handleOnchangeAvatar = async (value) => {
+        // const file = fileList[0]
+        // if (!file.url && !file.preview) {
+        //     file.preview = await getBase64(file.originFileObj );
+        // }
+        // setAvatar(file.preview)
+        // console.log(file)
+        setAvatar(value)
     }
 
     const handleUpdate = () => {
