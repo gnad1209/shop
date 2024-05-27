@@ -8,7 +8,7 @@ import { useMutationHooks } from '../../hooks/useMutationHook'
 import Loading from '../../Components/LoadingComponent/Loading'
 import * as message from '../../Components/Message/Message'
 import { updateUser } from '../../redux/slide/userSlide'
-import { Button, Upload } from 'antd'
+import { Button, Upload } from 'antd';
 import { UploadOutlined} from '@ant-design/icons'
 import { getBase64 } from '../../utils'
 
@@ -19,6 +19,8 @@ const ProfilePage = () => {
     const [phone, setPhone] = useState('')
     const [address, setAddress] = useState('')
     const [avatar, setAvatar] = useState('')
+    const [previewUrl, setPreviewUrl] = useState('');
+    // const [fileList, setFileList] = useState<UploadFile>('');
     const mutation = useMutationHooks(
         (data) => {
             const { id, access_token, ...rests } = data
@@ -35,6 +37,7 @@ const ProfilePage = () => {
         setPhone(user?.phone)
         setAddress(user?.address)
         setAvatar(user?.avatar)
+        setPreviewUrl(user?.avatar)
     }, [user])
 
     useEffect(() => {
@@ -64,14 +67,14 @@ const ProfilePage = () => {
         setAddress(value)
     }
 
-    const handleOnchangeAvatar = async (value) => {
-        // const file = fileList[0]
-        // if (!file.url && !file.preview) {
-        //     file.preview = await getBase64(file.originFileObj );
-        // }
-        // setAvatar(file.preview)
-        // console.log(file)
-        setAvatar(value)
+    const handleOnchangeAvatar = async ({fileList}) => {
+        const file = fileList[0]
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj);
+        }
+        console.log("file.originFileObj:",file.originFileObj)
+        setAvatar(file.originFileObj)
+        setPreviewUrl(file.preview)
     }
 
     const handleUpdate = () => {
@@ -137,12 +140,12 @@ const ProfilePage = () => {
                             <Button icon={<UploadOutlined />}>Select File</Button>
                         </WrapperUploadFile>
                         {avatar && (
-                            <img src={avatar} style={{
+                            <img src={previewUrl} style={{
                                 height: '60px',
                                 width: '60px',
                                 borderRadius: '50%',
                                 objectFit: 'cover'
-                            }} alt="avatar"/>
+                            }} alt="Preview"/>
                         )}
                         <ButtonComponent
                             onClick={handleUpdate}

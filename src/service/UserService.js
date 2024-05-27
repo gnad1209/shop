@@ -38,6 +38,7 @@ export const updateUser = async (id, data, access_token) => {
     const res = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/user/update-user/${id}`, data, {
         headers: {
             token: `Bearer ${access_token}`,
+            "Content-Type": `multipart/form-data`
         },
         
     })
