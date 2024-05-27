@@ -1,4 +1,4 @@
-import React,{ useState,useEffect,Fragment } from 'react'
+import React,{ useState,useEffect } from 'react'
 import NavBarComponent  from '../../Components/NavbarComponent/NavbarComponent'
 import CardComponent from '../../Components/CardComponent/CardComponent'
 import { Col, Pagination, Row } from 'antd'
@@ -37,8 +37,7 @@ const TypeProductsPage = () => {
       if(state){
           fetchProductType(state, panigate.page, panigate.limit)
       }
-  }, [state,panigate.page, panigate.limit])
-
+  }, [state,panigate.page, panigate.limit]) 
 
   const onChange = (current, pageSize) => {
       setPanigate({...panigate, page: current - 1, limit: pageSize})    

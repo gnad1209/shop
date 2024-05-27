@@ -20,7 +20,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const [search,setSearch] = useState('')
     const [isOpenPopup, setIsOpenPopup] = useState(false)
     const order = useSelector((state) => state.order)
-    const [loading, setLoading] = useState(false)
+    const [isPending, setLoading] = useState(false)
     const handleNavigateLogin = () => {
         navigate('/sign-in')
     }
@@ -85,15 +85,15 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             <ButtonInputSearch
               size="large"
               bordered={false}
-              textbutton="Tìm kiếm"
+              textButton="Tìm kiếm"
               placeholder="input search text"
               onChange={onSearch}
-              backgroundColorButton="#5a20c1"
+              styleButton="#5a20c1"
             />
           </Col>
         )}
         <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
-          <Loading isLoading={loading}>
+          <Loading isLoading={isPending}>
             <WrapperHeaderAccount>
               {userAvatar ? (
                 <img src={userAvatar} alt="avatar" style={{

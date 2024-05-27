@@ -19,11 +19,14 @@ const DetailsOrderPage = () => {
     const res = await OrderService.getDetailsOrder(id, state?.token)
     return res.data
   }
+  console.log(id, state?.token)
 
-  const queryOrder = useQuery({ queryKey: ['orders-details'], queryFn: fetchDetailsOrder }, {
-    enabled: id
-  })
-  const { isLoading, data } = queryOrder
+  const queryOrder = useQuery({ queryKey: ['orders-details'], queryFn: fetchDetailsOrder }
+  // , {
+  //   enabled: id
+  // }
+)
+  const { isPending, data } = queryOrder
 
   const priceMemo = useMemo(() => {
     const result = data?.orderItems?.reduce((total, cur) => {
@@ -33,7 +36,7 @@ const DetailsOrderPage = () => {
   },[data])
 
   return (
-   <Loading isLoading={isLoading}>
+   <Loading isLoading={isPending}>
      <div style={{width: '100%', height: '100vh', background: '#f5f5fa'}}>
       <div style={{ width: '1270px', margin: '0 auto', height: '1270px'}}>
         <h4>Chi tiết đơn hàng</h4>
