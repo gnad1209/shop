@@ -19,11 +19,11 @@ const MyOrderPage = () => {
     return res.data
   }
   const user = useSelector((state) => state.user)
-
-  const queryOrder = useQuery({ queryKey: ['orders'], queryFn: fetchMyOrder }, {
-    enabled: state?.id && state?.token
-  })
-  const { isLoading, data } = queryOrder
+  const queryOrder = useQuery({ queryKey: ['order'], queryFn: fetchMyOrder }
+  // ,{
+  //   enabled: state?.id && state?.token}
+  )
+  const { isPending, data } = queryOrder
 
   const handleDetailsOrder = (id) => {
     navigate(`/details-order/${id}`, {
@@ -48,7 +48,7 @@ const MyOrderPage = () => {
       },
     })
   }
-  const { isLoading: isLoadingCancel, isSuccess: isSuccessCancel, isError: isErrorCancle, data: dataCancel } = mutation
+  const { isPending: isLoadingCancel, isSuccess: isSuccessCancel, isError: isErrorCancle, data: dataCancel } = mutation
 
   useEffect(() => {
     if (isSuccessCancel && dataCancel?.status === 'OK') {
@@ -85,7 +85,7 @@ const MyOrderPage = () => {
   }
 
   return (
-    <Loading isLoading={isLoading || isLoadingCancel}>
+    <Loading isLoading={isPending || isLoadingCancel}>
       <WrapperContainer>
         <div style={{height: '100%', width: '1270px', margin: '0 auto'}}>
           <h4>Đơn hàng của tôi</h4>

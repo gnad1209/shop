@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { routes } from './routes'
 import DefaultComponent from './Components/DefaultComponent/DefaultComponent'
-import { useQuery } from '@tanstack/react-query'
 import { isJsonString } from './utils'
 import { jwtDecode } from "jwt-decode";
 import * as UserService from './service/UserService'
@@ -14,7 +13,7 @@ import { resetUser, updateUser } from './redux/slide/userSlide'
 
 export function App() {
   const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isPending, setIsLoading] = useState(false)
   const user = useSelector((state) => state.user)
 
   useEffect(() => {
@@ -64,7 +63,7 @@ export function App() {
 
   return (
     <div style={{height: '100vh', width: '100%'}}>
-      <Loading isLoading={isLoading}>
+      <Loading isLoading={isPending}>
       <Router>
         <Routes>
           {routes.map((route) => {
