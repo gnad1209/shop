@@ -149,18 +149,17 @@ const OrderAdmin = () => {
   ];
 
   const dataTable = orders?.data?.length && orders?.data?.map((order) => {
-    console.log('usewr', order)
-    return { ...order, key: order._id, userName: order?.shippingAddress?.fullName, phone: order?.shippingAddress?.phone, address: order?.shippingAddress?.address, paymentMethod: orderContant.payment[order?.paymentMethod],isPaid: order?.isPaid ? 'TRUE' :'FALSE',isDelivered: order?.isDelivered ? 'TRUE' : 'FALSE', totalPrice: convertPrice(order?.totalPrice)}
+    return { ...order, key: order._id, userName: order?.shippingAddress?.fullName, phone: order?.shippingAddress?.phone, address: order?.shippingAddress?.address, paymentMethod: orderContant.payment[order?.paymentMethod], isPaid: order?.isPaid ? 'TRUE' : 'FALSE', isDelivered: order?.isDelivered ? 'TRUE' : 'FALSE', totalPrice: convertPrice(order?.totalPrice) }
   })
 
   return (
     <div>
       <WrapperHeader>Quản lý đơn hàng</WrapperHeader>
-      <div style={{height: 200, width:200}}>
+      <div style={{ height: 200, width: 200 }}>
         <PieChartComponent data={orders?.data} />
       </div>
       <div style={{ marginTop: '20px' }}>
-        <TableComponent  columns={columns} isLoading={isLoadingOrders} data={dataTable} />
+        <TableComponent columns={columns} isLoading={isLoadingOrders} data={dataTable} />
       </div>
     </div>
   )

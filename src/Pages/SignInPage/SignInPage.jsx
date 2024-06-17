@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { React, useEffect } from 'react'
 import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style'
 import InputForm from '../../Components/InputForm/InputForm'
 import ButtonComponent from '../../Components/ButtonComponent/ButtonComponent'
@@ -20,11 +20,11 @@ const SignInPage = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch()
   const location = useLocation()
-  const user  = useSelector((state) => state.user)
+  const user = useSelector((state) => state.user)
 
 
   const navigate = useNavigate()
-    
+
   const mutation = useMutationHooks(
     data => UserService.loginUser(data)
   )
@@ -32,27 +32,27 @@ const SignInPage = () => {
   const { data, isPending, isSuccess } = mutation
   useEffect(() => {
     if (isSuccess) {
-      if(location?.state) {
+      if (location?.state) {
         navigate(location?.state)
-      }else {
+      } else {
         navigate('/')
       }
-      localStorage.setItem('access_token',JSON.stringify(data?.access_token))
+      localStorage.setItem('access_token', JSON.stringify(data?.access_token))
       localStorage.setItem('refresh_token', JSON.stringify(data?.refresh_token))
-      if(data?.access_token){
+      if (data?.access_token) {
         const decoded = jwtDecode(data?.access_token);
-        if(decoded?.id){
-          handleGetDetailUser(decoded?.id,data?.access_token)
+        if (decoded?.id) {
+          handleGetDetailUser(decoded?.id, data?.access_token)
         }
       }
     }
   }, [isSuccess])
 
-  const handleGetDetailUser = async (id,token) => {
+  const handleGetDetailUser = async (id, token) => {
     const storage = localStorage.getItem('refresh_token')
     const refreshToken = JSON.parse(storage)
-    const res = await UserService.getDetailUser(id,token)
-    dispatch(updateUser({...res?.data,access_token: token}))
+    const res = await UserService.getDetailUser(id, token)
+    dispatch(updateUser({ ...res?.data, access_token: token }))
   }
 
   const handleNavigateSignUp = () => {
@@ -79,10 +79,10 @@ const SignInPage = () => {
         <WrapperContainerLeft>
           <h1>Xin chào</h1>
           <p>Đăng nhập và tạo tài khoản</p>
-          <InputForm style={{marginBottom:'10px'}} placeholder='abc@gmail.com' value={email} onChange={handleOnchangeEmail}/>
+          <InputForm style={{ marginBottom: '10px' }} placeholder='abc@gmail.com' value={email} onChange={handleOnchangeEmail} />
           <div style={{ position: 'relative' }}>
             <span
-              onClick={() =>{setIsShowPassword(!isShowPassword)}}
+              onClick={() => { setIsShowPassword(!isShowPassword) }}
               style={{
                 zIndex: 10,
                 position: 'absolute',
@@ -106,26 +106,26 @@ const SignInPage = () => {
           {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
           <Loading isLoading={isPending}>
             <ButtonComponent
-                disabled={!email.length || !password.length}
-                onClick={handleSignIn}
-                size={40}
-                styleButton={{ 
-                    background: 'rgb(255, 57, 69)',
-                    height: '48px',
-                    width: '100%',
-                    border: 'none',
-                    borderRadius: '4px',
-                    margin: '26px 0 10px'
-                }}
-                textButton={"Đăng nhập"}
-                styleTextButton={{ color: "#fff",fontSize:'15px',fontWeight:'700' }}>
+              disabled={!email.length || !password.length}
+              onClick={handleSignIn}
+              size={40}
+              styleButton={{
+                background: 'rgb(255, 57, 69)',
+                height: '48px',
+                width: '100%',
+                border: 'none',
+                borderRadius: '4px',
+                margin: '26px 0 10px'
+              }}
+              textButton={"Đăng nhập"}
+              styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: '700' }}>
             </ButtonComponent>
           </Loading>
           <p><WrapperTextLight>Quên mật khẩu?</WrapperTextLight></p>
-          <p style={{margin:0}}>Chưa có tài khoản? <WrapperTextLight  onClick={handleNavigateSignUp} style={{cursor:'pointer'}}>Tạo tài khoản</WrapperTextLight></p>
+          <p style={{ margin: 0 }}>Chưa có tài khoản? <WrapperTextLight onClick={handleNavigateSignUp} style={{ cursor: 'pointer' }}>Tạo tài khoản</WrapperTextLight></p>
         </WrapperContainerLeft>
         <WrapperContainerRight>
-          <Image src={imageLogo} alt={'imageLogo'} preview={false} height='203' width='203'/>
+          <Image src={imageLogo} alt={'imageLogo'} preview={false} height='203' width='203' />
           <h4>Mua sắm tại Shop Gnad</h4>
         </WrapperContainerRight>
       </div>

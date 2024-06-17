@@ -1,5 +1,5 @@
-import { Col, Image,Rate, Row } from 'antd'
-import React, { useState,useEffect,useMemo } from 'react'
+import { Col, Image, Rate, Row } from 'antd'
+import React, { useState, useEffect, useMemo } from 'react'
 import imageProductSmall from '../../assests/images/imagesmall.webp'
 import { WrapperStyleImageSmall, WrapperStyleColImage, WrapperStyleNameProduct, WrapperStyleTextSell, WrapperPriceProduct, WrapperPriceTextProduct, WrapperAddressProduct, WrapperQualityProduct, WrapperInputNumber, WrapperBtnQualityProduct } from './style'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
@@ -9,28 +9,28 @@ import { useQuery } from '@tanstack/react-query'
 import Loading from '../LoadingComponent/Loading'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { addOrderProduct,resetOrder } from '../../redux/slide/orderSlide'
+import { addOrderProduct, resetOrder } from '../../redux/slide/orderSlide'
 import { convertPrice, initFacebookSDK } from '../../utils'
 import * as message from '../Message/Message'
 import LikeButtonComponent from '../LikeButtonComponent/LikeButtonComponent'
 import CommentComponent from '../CommentComponent/CommentComponent'
 
-const ProductDetailComponent = ({idProduct}) => {
+const ProductDetailComponent = ({ idProduct }) => {
     const [numProduct, setNumProduct] = useState(1)
     const user = useSelector((state) => state.user)
     const order = useSelector((state) => state.order)
-    const [errorLimitOrder,setErrorLimitOrder] = useState(false)
+    const [errorLimitOrder, setErrorLimitOrder] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
 
-    const onChange = (value) => { 
+    const onChange = (value) => {
         setNumProduct(Number(value))
     }
 
     const fetchGetDetailProduct = async (context) => {
         const id = context?.queryKey && context?.queryKey[1]
-        if(id) {
+        if (id) {
             const res = await ProductService.getDetailsProduct(id)
             return res.data
         }
@@ -41,16 +41,16 @@ const ProductDetailComponent = ({idProduct}) => {
     }, [])
 
     useEffect(() => {
-        const orderRedux = order?.orderItems?.find((item) => item.product === productDetails?._id) 
-        if((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
+        const orderRedux = order?.orderItems?.find((item) => item.product === productDetails?._id)
+        if ((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
             setErrorLimitOrder(false)
-        } else if(productDetails?.countInStock === 0){
+        } else if (productDetails?.countInStock === 0) {
             setErrorLimitOrder(true)
         }
-    },[numProduct])
+    }, [numProduct])
 
     useEffect(() => {
-        if(order.isSucessOrder) {
+        if (order.isSucessOrder) {
             message.success('Đã thêm vào giỏ hàng')
         }
         return () => {
@@ -59,25 +59,25 @@ const ProductDetailComponent = ({idProduct}) => {
     }, [order.isSucessOrder])
 
     const handleChangeCount = (type, limited) => {
-        if(type === 'increase') {
-            if(!limited) {
+        if (type === 'increase') {
+            if (!limited) {
                 setNumProduct(numProduct + 1)
             }
-        }else {
-            if(!limited) {
+        } else {
+            if (!limited) {
                 setNumProduct(numProduct - 1)
             }
         }
     }
 
-    const { isLoading, data: productDetails } = useQuery({queryKey: ['product-details', idProduct],queryFn: fetchGetDetailProduct, enabled: !!idProduct})
-    
+    const { isPending, data: productDetails } = useQuery({ queryKey: ['product-details', idProduct], queryFn: fetchGetDetailProduct, enabled: !!idProduct })
+
     const handleAddOrderProduct = () => {
-        if(!user?.id) {
-            navigate('/sign-in', {state: location?.pathname})
-        }else {
+        if (!user?.id) {
+            navigate('/sign-in', { state: location?.pathname })
+        } else {
             const orderRedux = order?.orderItems?.find((item) => item.product === productDetails?._id)
-            if((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
+            if ((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
                 dispatch(addOrderProduct({
                     orderItem: {
                         name: productDetails?.name,
@@ -96,8 +96,8 @@ const ProductDetailComponent = ({idProduct}) => {
     }
 
     return (
-        <Loading isLoading={isLoading}>
-            <Row style={{ padding: '16px', background: '#fff', borderRadius: '4px', height:'100%' }}>
+        <Loading isLoading={isPending}>
+            <Row style={{ padding: '16px', background: '#fff', borderRadius: '4px', height: '100%' }}>
                 <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
                     <Image src={productDetails?.image} alt="image prodcut" preview={false} />
                     <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
@@ -141,19 +141,19 @@ const ProductDetailComponent = ({idProduct}) => {
                         <span className='change-address'>Đổi địa chỉ</span>
                     </WrapperAddressProduct>
                     <LikeButtonComponent
-                     dataHref={ process.env.REACT_APP_IS_LOCAL 
-                                ? "https://developers.facebook.com/docs/plugins/" 
-                                : window.location.href
-                            } 
+                        dataHref={process.env.REACT_APP_IS_LOCAL
+                            ? "https://developers.facebook.com/docs/plugins/"
+                            : window.location.href
+                        }
                     />
                     <div style={{ margin: '10px 0 20px', padding: '10px 0', borderTop: '1px solid #e5e5e5', borderBottom: '1px solid #e5e5e5' }}>
                         <div style={{ marginBottom: '10px' }}>Số lượng</div>
                         <WrapperQualityProduct>
-                            <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('decrease',numProduct === 1)}>
+                            <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('decrease', numProduct === 1)}>
                                 <MinusOutlined style={{ color: '#000', fontSize: '20px' }} />
                             </button>
                             <WrapperInputNumber onChange={onChange} defaultValue={1} max={productDetails?.countInStock} min={1} value={numProduct} size="small" />
-                            <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('increase',  numProduct === productDetails?.countInStock)}>
+                            <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('increase', numProduct === productDetails?.countInStock)}>
                                 <PlusOutlined style={{ color: '#000', fontSize: '20px' }} />
                             </button>
                         </WrapperQualityProduct>
@@ -173,7 +173,7 @@ const ProductDetailComponent = ({idProduct}) => {
                                 textButton={'Chọn mua'}
                                 styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                             ></ButtonComponent>
-                            {errorLimitOrder && <div style={{color: 'red'}}>Sản phẩm hết hàng</div>}
+                            {errorLimitOrder && <div style={{ color: 'red' }}>Sản phẩm hết hàng</div>}
                         </div>
                         <ButtonComponent
                             size={40}
@@ -189,15 +189,15 @@ const ProductDetailComponent = ({idProduct}) => {
                         ></ButtonComponent>
                     </div>
                 </Col>
-                <CommentComponent 
-                    dataHref={process.env.REACT_APP_IS_LOCAL 
+                <CommentComponent
+                    dataHref={process.env.REACT_APP_IS_LOCAL
                         ? "https://developers.facebook.com/docs/plugins/comments#configurator"
                         : window.location.href
-                    } 
-                    width="1270" 
+                    }
+                    width="1270"
                 />
             </Row >
-            
+
         </Loading>
     )
 }

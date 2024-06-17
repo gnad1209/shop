@@ -1,4 +1,4 @@
-import React,{ useEffect,useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ButtonComponent from '../../Components/ButtonComponent/ButtonComponent'
 import InputForm from '../../Components/InputForm/InputForm'
@@ -9,7 +9,7 @@ import Loading from '../../Components/LoadingComponent/Loading'
 import * as message from '../../Components/Message/Message'
 import { updateUser } from '../../redux/slide/userSlide'
 import { Button, Upload } from 'antd';
-import { UploadOutlined} from '@ant-design/icons'
+import { UploadOutlined } from '@ant-design/icons'
 import { getBase64 } from '../../utils'
 
 const ProfilePage = () => {
@@ -67,22 +67,21 @@ const ProfilePage = () => {
         setAddress(value)
     }
 
-    const handleOnchangeAvatar = async ({fileList}) => {
+    const handleOnchangeAvatar = async ({ fileList }) => {
         const file = fileList[0]
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
         }
-        console.log("file.originFileObj:",file.originFileObj)
         setAvatar(file.originFileObj)
         setPreviewUrl(file.preview)
     }
 
     const handleUpdate = () => {
-        mutation.mutate({ id: user?.id, email, name, phone,avatar, address, access_token: user?.access_token })
+        mutation.mutate({ id: user?.id, email, name, phone, avatar, address, access_token: user?.access_token })
 
     }
-  return (
-    <div style={{ width: '1270px', margin: '0 auto', height: '500px' }}>
+    return (
+        <div style={{ width: '1270px', margin: '0 auto', height: '500px' }}>
             <WrapperHeader>Thông tin người dùng</WrapperHeader>
             <Loading isLoading={isPending}>
                 <WrapperContentProfile>
@@ -145,7 +144,7 @@ const ProfilePage = () => {
                                 width: '60px',
                                 borderRadius: '50%',
                                 objectFit: 'cover'
-                            }} alt="Preview"/>
+                            }} alt="Preview" />
                         )}
                         <ButtonComponent
                             onClick={handleUpdate}
@@ -180,7 +179,7 @@ const ProfilePage = () => {
             </Loading>
         </div>
 
-  )
+    )
 }
 
 export default ProfilePage
