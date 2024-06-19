@@ -84,7 +84,7 @@ const AdminUser = () => {
     if (res?.data) {
       setStateUserDetails({
         name: res?.data?.name,
-        email: res?.data?.email,    
+        email: res?.data?.email,
         phone: res?.data?.phone,
         isAdmin: res?.data?.isAdmin,
         address: res?.data?.address,
@@ -335,7 +335,7 @@ const AdminUser = () => {
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
       <div style={{ marginTop: '20px' }}>
-        <TableComponent handleDelteMany={handleDelteManyUsers} columns={columns} isLoading={isFetchingUser} data={dataTable} onRow={(record, rowIndex) => {
+        <TableComponent handleDelteMany={handleDelteManyUsers} columns={columns} isLoading={isFetchingUser} data={dataTable} pagination={{ pageSize: 5 }} onRow={(record, rowIndex) => {
           return {
             onClick: event => {
               setRowSelected(record._id)
