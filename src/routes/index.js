@@ -3,7 +3,7 @@ import OrderPage from '../Pages/OrderPage/OrderPage'
 import ProductsPage from '../Pages/ProductsPage/ProductsPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import OrderSucess from '../Pages/OrderSucess/OrderSucess'
-import TypeProductsPage from '../Pages/TypeProductsPage/TypeProductsPage'
+import TypeProductPage from '../Pages/TypeProductsPage/TypeProductsPage'
 import SignInPage from '../Pages/SignInPage/SignInPage'
 import SignUpPage from '../Pages/SignUpPage/SignUpPage'
 import ProductDetailPage from '../Pages/ProductDetailPage/ProductDetailPage'
@@ -51,7 +51,7 @@ export const routes = [
     },
     {
         path: '/product/:type',
-        page: TypeProductsPage,
+        page: TypeProductPage,
         isShowHeader: true
     },
     {
