@@ -118,7 +118,7 @@ const SignUpPage = () => {
                 borderRadius: '4px',
                 margin: '26px 0 10px'
               }}
-              textbutton={'Đăng ký'}
+              textButton={'Đăng ký'}
               styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
             ></ButtonComponent>
           </Loading>

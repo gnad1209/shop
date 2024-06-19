@@ -5,6 +5,9 @@ export const WrapperContainerLeft = styled.div`
     padding: 40px 45px 24px;
     display: flex;
     flex-direction: column;
+    @media (max-width: 390px){
+        height: 100%
+    }
 `
 
 export const WrapperContainerRight = styled.div`
@@ -15,6 +18,9 @@ export const WrapperContainerRight = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 4px;
+    @media (max-width: 768px){
+        display:none
+    }
 `
 export const WrapperTextLight = styled.span`
     color: rgb(13, 92, 182);
