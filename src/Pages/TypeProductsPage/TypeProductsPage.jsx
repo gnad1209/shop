@@ -9,13 +9,13 @@ import Loading from '../../Components/LoadingComponent/Loading'
 import { useSelector } from 'react-redux'
 import { useDebounce } from '../../hooks/useDebounce'
 
-const TypeProductsPage = () => {
+const TypeProductPage = () => {
     const searchProduct = useSelector((state) => state?.product?.search)
     const searchDebounce = useDebounce(searchProduct, 500)
 
     const { state } = useLocation()
     const [products, setProducts] = useState([])
-    const [isPending, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [panigate, setPanigate] = useState({
         page: 0,
         limit: 10,
@@ -24,7 +24,7 @@ const TypeProductsPage = () => {
     const fetchProductType = async (type, page, limit) => {
         setLoading(true)
         const res = await ProductService.getProductType(type, page, limit)
-        if (res?.status === 'OK') {
+        if (res?.status == 'OK') {
             setLoading(false)
             setProducts(res?.data)
             setPanigate({ ...panigate, total: res?.totalPage })
@@ -39,11 +39,12 @@ const TypeProductsPage = () => {
         }
     }, [state, panigate.page, panigate.limit])
 
+
     const onChange = (current, pageSize) => {
         setPanigate({ ...panigate, page: current - 1, limit: pageSize })
     }
     return (
-        <Loading isLoading={isPending}>
+        <Loading isLoading={loading}>
             <div style={{ width: '100%', background: '#efefef', height: 'calc(100vh - 64px)' }}>
                 <div style={{ width: '1270px', margin: '0 auto', height: '100%' }}>
                     <Row style={{ flexWrap: 'nowrap', paddingTop: '10px', height: 'calc(100% - 20px)' }}>
@@ -86,4 +87,4 @@ const TypeProductsPage = () => {
 }
 
 
-export default TypeProductsPage
+export default TypeProductPage
