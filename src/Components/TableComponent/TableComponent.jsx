@@ -5,7 +5,7 @@ import { Excel } from "antd-table-saveas-excel";
 import { useMemo } from 'react';
 
 const TableComponent = (props) => {
-  const { selectionType = 'checkbox', data: dataSource = [], isPending = false, columns = [], handleDelteMany } = props
+  const { selectionType = 'checkbox', data: dataSource = [], isLoading = false, columns = [], handleDelteMany } = props
   const [rowSelectedKeys, setRowSelectedKeys] = useState([])
   const newColumnExport = useMemo(() => {
     const arr = columns?.filter((col) => col.dataIndex !== 'action')
@@ -37,7 +37,7 @@ const TableComponent = (props) => {
   };
 
   return (
-    <Loading isLoading={isPending}>
+    <Loading isLoading={isLoading}>
       {!!rowSelectedKeys.length && (
         <div style={{
           background: '#1d1ddd',
