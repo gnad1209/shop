@@ -24,7 +24,7 @@ const TypeProductPage = () => {
     const fetchProductType = async (type, page, limit) => {
         setLoading(true)
         const res = await ProductService.getProductType(type, page, limit)
-        if(res?.status == 'OK') {
+        if (res?.status == 'OK') {
             setLoading(false)
             setProducts(res?.data)
             setPanigate({...panigate, total: res?.totalPage})
@@ -38,6 +38,7 @@ const TypeProductPage = () => {
             fetchProductType(state, panigate.page, panigate.limit)
         }
     }, [state,panigate.page, panigate.limit])
+
 
 
     const onChange = (current, pageSize) => {
@@ -85,7 +86,6 @@ const TypeProductPage = () => {
         </Loading>
     )
 }
-
 
 
 export default TypeProductPage

@@ -48,7 +48,7 @@ const AdminProduct = () => {
         rating,
         image,
         type,
-        countInStock,discount } = data
+        countInStock, discount } = data
       const res = ProductService.createProduct({
         name,
         price,
@@ -121,9 +121,9 @@ const AdminProduct = () => {
   }
 
   useEffect(() => {
-    if(!isModalOpen) {
+    if (!isModalOpen) {
       form.setFieldsValue(stateProductDetails)
-    }else {
+    } else {
       form.setFieldsValue(inittial())
     }
   }, [form, stateProductDetails, isModalOpen])
@@ -443,10 +443,10 @@ const AdminProduct = () => {
   }
 
   const handleChangeSelect = (value) => {
-      setStateProduct({
-        ...stateProduct,
-        type: value
-      })
+    setStateProduct({
+      ...stateProduct,
+      type: value
+    })
   }
 
   return (
@@ -456,7 +456,7 @@ const AdminProduct = () => {
         <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button>
       </div>
       <div style={{ marginTop: '20px' }}>
-        <TableComponent handleDelteMany={handleDelteManyProducts} columns={columns} isLoading={isLoadingProducts} data={dataTable}  pagination={{ pageSize: 5 }} onRow={(record, rowIndex) => {
+        <TableComponent handleDelteMany={handleDelteManyProducts} columns={columns} isPending={isLoadingProducts} pagination={{ pageSize: 5 }} data={dataTable} onRow={(record, rowIndex) => {
           return {
             onClick: event => {
               setRowSelected(record._id)
@@ -495,7 +495,7 @@ const AdminProduct = () => {
                 value={stateProduct.type}
                 onChange={handleChangeSelect}
                 options={renderOptions(typeProduct?.data?.data)}
-                />
+              />
             </Form.Item>
             {stateProduct.type === 'add_type' && (
               <Form.Item
