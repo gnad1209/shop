@@ -27,7 +27,6 @@ const ProductDetailComponent = ({ idProduct }) => {
     const onChange = (value) => {
         setNumProduct(Number(value))
     }
-
     const fetchGetDetailProduct = async (context) => {
         const id = context?.queryKey && context?.queryKey[1]
         if (id) {
@@ -70,8 +69,8 @@ const ProductDetailComponent = ({ idProduct }) => {
         }
     }
 
-    const { isPending, data: productDetails } = useQuery({ queryKey: ['product-details', idProduct], queryFn: fetchGetDetailProduct, enabled: !!idProduct })
-
+    const { isLoading, data: productDetails } = useQuery({ queryKey: ['product-details', idProduct], queryFn: fetchGetDetailProduct, enabled: !!idProduct })
+    // console.log(productDetails, user)
     const handleAddOrderProduct = () => {
         if (!user?.id) {
             navigate('/sign-in', { state: location?.pathname })
@@ -86,8 +85,10 @@ const ProductDetailComponent = ({ idProduct }) => {
                         price: productDetails?.price,
                         product: productDetails?._id,
                         discount: productDetails?.discount,
-                        countInstock: productDetails?.countInStock
-                    }
+                        countInstock: productDetails?.countInStock,
+                        user: user
+                    },
+
                 }))
             } else {
                 setErrorLimitOrder(true)
@@ -96,7 +97,7 @@ const ProductDetailComponent = ({ idProduct }) => {
     }
 
     return (
-        <Loading isLoading={isPending}>
+        <Loading isLoading={isLoading}>
             <Row style={{ padding: '16px', background: '#fff', borderRadius: '4px', height: '100%' }}>
                 <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
                     <Image src={productDetails?.image} alt="image prodcut" preview={false} />

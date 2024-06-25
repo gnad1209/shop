@@ -13,7 +13,7 @@ const TypeProductPage = () => {
     const searchProduct = useSelector((state) => state?.product?.search)
     const searchDebounce = useDebounce(searchProduct, 500)
 
-    const { state } = useLocation()
+    const state = useLocation()
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(false)
     const [panigate, setPanigate] = useState({
@@ -24,7 +24,7 @@ const TypeProductPage = () => {
     const fetchProductType = async (type, page, limit) => {
         setLoading(true)
         const res = await ProductService.getProductType(type, page, limit)
-        if (res?.status == 'OK') {
+        if (res?.status === 'OK') {
             setLoading(false)
             setProducts(res?.data)
             setPanigate({ ...panigate, total: res?.totalPage })
@@ -32,13 +32,12 @@ const TypeProductPage = () => {
             setLoading(false)
         }
     }
-
+    const type = state?.pathname.split('/')[2]
     useEffect(() => {
-        if (state) {
-            fetchProductType(state, panigate.page, panigate.limit)
+        if (type) {
+            fetchProductType(type, panigate.page, panigate.limit)
         }
-    }, [state, panigate.page, panigate.limit])
-
+    }, [type, panigate.page, panigate.limit])
 
     const onChange = (current, pageSize) => {
         setPanigate({ ...panigate, page: current - 1, limit: pageSize })

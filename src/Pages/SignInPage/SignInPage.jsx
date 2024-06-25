@@ -20,11 +20,10 @@ const SignInPage = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch()
   const location = useLocation()
-  const user = useSelector((state) => state.user)
+  // const user = useSelector((state) => state.user)
 
 
   const navigate = useNavigate()
-
   const mutation = useMutationHooks(
     data => UserService.loginUser(data)
   )
@@ -52,7 +51,7 @@ const SignInPage = () => {
     const storage = localStorage.getItem('refresh_token')
     const refreshToken = JSON.parse(storage)
     const res = await UserService.getDetailUser(id, token)
-    dispatch(updateUser({ ...res?.data, access_token: token }))
+    dispatch(updateUser({ ...res?.data, access_token: token, refreshToken }))
   }
 
   const handleNavigateSignUp = () => {
