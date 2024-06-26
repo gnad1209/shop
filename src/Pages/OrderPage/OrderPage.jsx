@@ -63,16 +63,18 @@ const OrderPage = () => {
   }
 
   const handleOnchangeCheckAll = (e) => {
-    if (e.target.checked) {
-      const newListChecked = []
-      order?.orderItems?.forEach((item) => {
-        if (item?.user?.id == user?.id) {
-          newListChecked.push(item?.product)
-        }
-      })
-      setListChecked(newListChecked)
-    } else {
-      setListChecked([])
+    if (order?.orderItems.map(order => order?.user?.id === user?.id)) {
+      if (e.target.checked) {
+        const newListChecked = []
+        order?.orderItems?.forEach((item) => {
+          if (item?.user?.id == user?.id) {
+            newListChecked.push(item?.product)
+          }
+        })
+        setListChecked(newListChecked)
+      } else {
+        setListChecked([])
+      }
     }
   }
 
@@ -104,30 +106,36 @@ const OrderPage = () => {
   }
 
   const priceMemo = useMemo(() => {
-    const result = order?.orderItemsSlected?.reduce((total, cur) => {
-      return total + ((cur.price * cur.amount))
-    }, 0)
-    return result
+    if (order?.orderItems?.map(od => od?.user?.id === user?.id)) {
+      const result = order?.orderItemsSlected?.reduce((total, cur) => {
+        return total + ((cur.price * cur.amount))
+      }, 0)
+      return result
+    }
   }, [order])
 
   const priceDiscountMemo = useMemo(() => {
-    const result = order?.orderItemsSlected?.reduce((total, cur) => {
-      const totalDiscount = cur.discount ? cur.discount : 0
-      return total + (priceMemo * (totalDiscount * cur.amount) / 100)
-    }, 0)
-    if (Number(result)) {
-      return result
+    if (order?.orderItems?.map(od => od?.user?.id === user?.id)) {
+      const result = order?.orderItemsSlected?.reduce((total, cur) => {
+        const totalDiscount = cur.discount ? cur.discount : 0
+        return total + (priceMemo * (totalDiscount * cur.amount) / 100)
+      }, 0)
+      if (Number(result)) {
+        return result
+      }
+      return 0
     }
-    return 0
   }, [order, priceMemo])
 
   const diliveryPriceMemo = useMemo(() => {
-    if (priceMemo >= 20000 && priceMemo < 500000) {
-      return 10000
-    } else if (priceMemo >= 500000 || order?.orderItemsSlected?.length === 0) {
-      return 0
-    } else {
-      return 20000
+    if (order?.orderItems?.map(od => od?.user?.id === user?.id)) {
+      if (priceMemo >= 20000 && priceMemo < 500000) {
+        return 10000
+      } else if (priceMemo >= 500000 || order?.orderItemsSlected?.length === 0) {
+        return 0
+      } else {
+        return 20000
+      }
     }
   }, [priceMemo, order?.orderItemsSlected?.length])
 
@@ -142,12 +150,14 @@ const OrderPage = () => {
   }
 
   const handleAddCard = () => {
-    if (!order?.orderItemsSlected?.length) {
-      message.error('Vui lòng chọn sản phẩm')
-    } else if (!user?.phone || !user.address || !user.name || !user.city) {
-      setIsOpenModalUpdateInfo(true)
-    } else {
-      navigate('/payment')
+    if (order?.orderItems?.map(od => od?.user?.id === user?.id)) {
+      if (!order?.orderItemsSlected?.length) {
+        message.error('Vui lòng chọn sản phẩm')
+      } else if (!user?.phone || !user.address || !user.name || !user.city) {
+        setIsOpenModalUpdateInfo(true)
+      } else {
+        navigate('/payment')
+      }
     }
   }
 
@@ -212,33 +222,35 @@ const OrderPage = () => {
       <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
         <h3 style={{ fontWeight: 'bold' }}>Giỏ hàng</h3>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <WrapperLeft>
-            <h4>Phí giao hàng</h4>
-            <WrapperStyleHeaderDilivery>
-              <StepComponent items={itemsDelivery} current={diliveryPriceMemo === 10000
-                ? 2 : diliveryPriceMemo === 20000 ? 1
-                  : order.orderItemsSlected.length === 0 ? 0 : 3} />
-            </WrapperStyleHeaderDilivery>
-            <WrapperStyleHeader>
-              <span style={{ display: 'inline-block', width: '390px' }}>
-                <CustomCheckbox onChange={handleOnchangeCheckAll} checked={listChecked?.length === order?.orderItems?.length}></CustomCheckbox>
-                <span> Tất cả ({order?.orderItems?.length} sản phẩm)</span>
-              </span>
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span>Đơn giá</span>
-                <span>Số lượng</span>
-                <span>Thành tiền</span>
-                <DeleteOutlined style={{ cursor: 'pointer' }} onClick={handleRemoveAllOrder} />
-              </div>
-            </WrapperStyleHeader>
-            <WrapperListOrder>
-              {order?.orderItems?.map((order) => {
-                if (order?.user?.id == user?.id) {
-                  return (
-                    <WrapperItemOrder key={order?.product}>
+          {order?.orderItems?.map((od) => {
+            if (od?.user?.id == user?.id) {
+              return (
+                <WrapperLeft>
+                  <h4>Phí giao hàng</h4>
+
+                  <WrapperStyleHeaderDilivery>
+                    <StepComponent items={itemsDelivery} current={diliveryPriceMemo === 10000
+                      ? 2 : diliveryPriceMemo === 20000 ? 1
+                        : order.orderItemsSlected.length === 0 ? 0 : 3} />
+                  </WrapperStyleHeaderDilivery>
+                  <WrapperStyleHeader>
+                    <span style={{ display: 'inline-block', width: '390px' }}>
+                      <CustomCheckbox onChange={handleOnchangeCheckAll} checked={listChecked?.length === order?.orderItems?.length}></CustomCheckbox>
+                      <span> Tất cả ({order?.orderItems?.length} sản phẩm)</span>
+                    </span>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span>Đơn giá</span>
+                      <span>Số lượng</span>
+                      <span>Thành tiền</span>
+                      <DeleteOutlined style={{ cursor: 'pointer' }} onClick={handleRemoveAllOrder} />
+                    </div>
+                  </WrapperStyleHeader>
+                  <WrapperListOrder>
+
+                    <WrapperItemOrder key={od?.product}>
                       <div style={{ width: '390px', display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <CustomCheckbox onChange={onChange} value={order?.product} checked={listChecked.includes(order?.product)}></CustomCheckbox>
-                        <img src={order?.image} alt='ảnh' style={{ width: '77px', height: '79px', objectFit: 'cover' }} />
+                        <CustomCheckbox onChange={onChange} value={od?.product} checked={listChecked.includes(od?.product)}></CustomCheckbox>
+                        <img src={od?.image} alt='ảnh' style={{ width: '77px', height: '79px', objectFit: 'cover' }} />
                         <div style={{
                           width: 260,
                           overflow: 'hidden',
@@ -248,26 +260,27 @@ const OrderPage = () => {
                       </div>
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <span>
-                          <span style={{ fontSize: '13px', color: '#242424' }}>{convertPrice(order?.price)}</span>
+                          <span style={{ fontSize: '13px', color: '#242424' }}>{convertPrice(od?.price)}</span>
                         </span>
                         <WrapperCountOrder>
-                          <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('decrease', order?.product, order?.amount === 1)}>
+                          <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('decrease', od?.product, od?.amount === 1)}>
                             <MinusOutlined style={{ color: '#000', fontSize: '10px' }} />
                           </button>
-                          <WrapperInputNumber defaultValue={order?.amount} value={order?.amount} size="small" min={1} max={order?.countInstock} />
-                          <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('increase', order?.product, order?.amount === order.countInstock, order?.amount === 1)}>
+                          <WrapperInputNumber defaultValue={od?.amount} value={od?.amount} size="small" min={1} max={od?.countInstock} />
+                          <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('increase', od?.product, od?.amount === order.countInstock, od?.amount === 1)}>
                             <PlusOutlined style={{ color: '#000', fontSize: '10px' }} />
                           </button>
                         </WrapperCountOrder>
-                        <span style={{ color: 'rgb(255, 66, 78)', fontSize: '13px', fontWeight: 500 }}>{convertPrice(order?.price * order?.amount)}</span>
-                        <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => handleDeleteOrder(order?.product)} />
+                        <span style={{ color: 'rgb(255, 66, 78)', fontSize: '13px', fontWeight: 500 }}>{convertPrice(od?.price * od?.amount)}</span>
+                        <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => handleDeleteOrder(od?.product)} />
                       </div>
                     </WrapperItemOrder>
-                  )
-                }
-              })}
-            </WrapperListOrder>
-          </WrapperLeft>
+
+                  </WrapperListOrder>
+                </WrapperLeft>
+              )
+            }
+          })}
           <WrapperRight>
             <div style={{ width: '100%' }}>
               <WrapperInfo>

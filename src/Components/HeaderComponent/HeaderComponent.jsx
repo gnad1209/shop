@@ -78,7 +78,6 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
 
   const length = order?.orderItems?.map((order => order?.user?.id == user?.id))
   const num = length.filter(e => e == true).length
-  console.log(num)
   return (
     <div style={{ heiht: '100%', width: '100%', display: 'flex', background: '#9255FD', justifyContent: 'center' }}>
       <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenSearch ? 'space-between' : 'unset' }}>

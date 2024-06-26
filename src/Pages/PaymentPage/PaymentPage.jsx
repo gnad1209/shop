@@ -137,8 +137,8 @@ const PaymentPage = () => {
     },
   )
 
-  const { isLoading, data } = mutationUpdate
-  const { data: dataAdd, isLoading: isLoadingAddOrder, isSuccess, isError } = mutationAddOrder
+  const { isPending, data } = mutationUpdate
+  const { data: dataAdd, isPending: isLoadingAddOrder, isSuccess, isError } = mutationAddOrder
 
   useEffect(() => {
     if (isSuccess && dataAdd?.status === 'OK') {
@@ -327,7 +327,7 @@ const PaymentPage = () => {
           </div>
         </div>
         <ModalComponent title="Cập nhật thông tin giao hàng" open={isOpenModalUpdateInfo} onCancel={handleCancleUpdate} onOk={handleUpdateInforUser}>
-          <Loading isLoading={isLoading}>
+          <Loading isLoading={isPending}>
             <Form
               name="basic"
               labelCol={{ span: 4 }}
