@@ -10,7 +10,8 @@ const initialState = {
     id: '',
     isAdmin: false,
     city: '',
-    refreshToken: ''
+    refreshToken: '',
+    search: '',
 }
 
 export const userSlide = createSlice({
@@ -18,7 +19,7 @@ export const userSlide = createSlice({
     initialState,
     reducers: {
         updateUser: (state, action) => {
-            const { name = '', email = '', access_token = '', address = '', phone = '', avatar = '', _id = '', isAdmin,city= '',refreshToken = '' } = action.payload
+            const { name = '', email = '', access_token = '', address = '', phone = '', avatar = '', _id = '', isAdmin, city = '', refreshToken = '' } = action.payload
             state.name = name ? name : state.name;
             state.email = email ? email : state.email;
             state.address = address ? address : state.address;
@@ -42,10 +43,13 @@ export const userSlide = createSlice({
             state.city = '';
             state.refreshToken = ''
         },
+        searchUser: (state, action) => {
+            state.search = action.payload
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { updateUser, resetUser } = userSlide.actions
+export const { updateUser, resetUser, searchUser } = userSlide.actions
 
 export default userSlide.reducer

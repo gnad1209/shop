@@ -57,10 +57,10 @@ export const orderSlide = createSlice({
       }
     },
     removeOrderProduct: (state, action) => {
-      const { idProduct } = action.payload
+      const { idProduct, user } = action.payload
 
-      const itemOrder = state?.orderItems?.filter((item) => item?.product !== idProduct)
-      const itemOrderSeleted = state?.orderItemsSlected?.filter((item) => item?.product !== idProduct)
+      const itemOrder = state?.orderItems?.filter((item) => item?.product !== idProduct && item?.user === user)
+      const itemOrderSeleted = state?.orderItemsSlected?.filter((item) => item?.product !== idProduct && item?.user === user)
 
       state.orderItems = itemOrder;
       state.orderItemsSlected = itemOrderSeleted;
@@ -75,10 +75,10 @@ export const orderSlide = createSlice({
 
     },
     selectedOrder: (state, action) => {
-      const { listChecked } = action.payload
+      const { listChecked, user } = action.payload
       const orderSelected = []
       state.orderItems.forEach((order) => {
-        if (listChecked.includes(order.product)) {
+        if (listChecked.includes(order.product) && order?.user?.id === user?.id) {
           orderSelected.push(order)
         };
       });

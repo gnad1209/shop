@@ -58,29 +58,28 @@ const OrderPage = () => {
     }
   }
 
-  const handleDeleteOrder = (idProduct) => {
-    dispatch(removeOrderProduct({ idProduct }))
+  const handleDeleteOrder = (idProduct, user) => {
+    dispatch(removeOrderProduct({ idProduct, user }))
   }
 
   const handleOnchangeCheckAll = (e) => {
-    if (order?.orderItems.map(order => order?.user?.id === user?.id)) {
-      if (e.target.checked) {
-        const newListChecked = []
-        order?.orderItems?.forEach((item) => {
-          if (item?.user?.id == user?.id) {
-            newListChecked.push(item?.product)
-          }
-        })
-        setListChecked(newListChecked)
-      } else {
-        setListChecked([])
-      }
+    if (e.target.checked) {
+      const newListChecked = []
+      order?.orderItems?.forEach((item) => {
+        if (item?.user?.id === user?.id) {
+
+          newListChecked.push(item?.product)
+        }
+      })
+      setListChecked(newListChecked)
+    } else {
+      setListChecked([])
     }
   }
 
   useEffect(() => {
-    dispatch(selectedOrder({ listChecked }))
-  }, [listChecked, dispatch])
+    dispatch(selectedOrder({ listChecked, user }))
+  }, [listChecked, user, dispatch])
 
   useEffect(() => {
     form.setFieldsValue(stateUserDetails)
@@ -106,7 +105,7 @@ const OrderPage = () => {
   }
 
   const priceMemo = useMemo(() => {
-    if (order?.orderItems?.map(od => od?.user?.id === user?.id)) {
+    if (order?.orderItems?.map(od => od?.user?.id == user?.id)) {
       const result = order?.orderItemsSlected?.reduce((total, cur) => {
         return total + ((cur.price * cur.amount))
       }, 0)
@@ -115,21 +114,20 @@ const OrderPage = () => {
   }, [order])
 
   const priceDiscountMemo = useMemo(() => {
-    if (order?.orderItems?.map(od => od?.user?.id === user?.id)) {
-      const result = order?.orderItemsSlected?.reduce((total, cur) => {
-        const totalDiscount = cur.discount ? cur.discount : 0
-        return total + (priceMemo * (totalDiscount * cur.amount) / 100)
-      }, 0)
-      if (Number(result)) {
-        return result
-      }
-      return 0
+    const result = order?.orderItemsSlected?.reduce((total, cur) => {
+      const totalDiscount = cur.discount ? cur.discount : 0
+      const totalPrice = cur.price
+      return total + (totalPrice * (totalDiscount * cur.amount) / 100)
+    }, 0)
+    if (Number(result)) {
+      return result
     }
+    return 0
   }, [order, priceMemo])
 
   const diliveryPriceMemo = useMemo(() => {
     if (order?.orderItems?.map(od => od?.user?.id === user?.id)) {
-      if (priceMemo >= 20000 && priceMemo < 500000) {
+      if (priceMemo >= 200000 && priceMemo < 500000) {
         return 10000
       } else if (priceMemo >= 500000 || order?.orderItemsSlected?.length === 0) {
         return 0
@@ -173,7 +171,7 @@ const OrderPage = () => {
     },
   )
 
-  const { isLoading } = mutationUpdate
+  const { isPending } = mutationUpdate
 
   const handleCancleUpdate = () => {
     setStateUserDetails({
@@ -217,36 +215,39 @@ const OrderPage = () => {
       description: 'Trên 500.000 VND',
     },
   ]
+  const length = order?.orderItems?.map((order => order?.user?.id == user?.id))
+  const num = length.filter(e => e == true).length
   return (
     <div style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
       <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
         <h3 style={{ fontWeight: 'bold' }}>Giỏ hàng</h3>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          {order?.orderItems?.map((od) => {
-            if (od?.user?.id == user?.id) {
-              return (
-                <WrapperLeft>
-                  <h4>Phí giao hàng</h4>
 
-                  <WrapperStyleHeaderDilivery>
-                    <StepComponent items={itemsDelivery} current={diliveryPriceMemo === 10000
-                      ? 2 : diliveryPriceMemo === 20000 ? 1
-                        : order.orderItemsSlected.length === 0 ? 0 : 3} />
-                  </WrapperStyleHeaderDilivery>
-                  <WrapperStyleHeader>
-                    <span style={{ display: 'inline-block', width: '390px' }}>
-                      <CustomCheckbox onChange={handleOnchangeCheckAll} checked={listChecked?.length === order?.orderItems?.length}></CustomCheckbox>
-                      <span> Tất cả ({order?.orderItems?.length} sản phẩm)</span>
-                    </span>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span>Đơn giá</span>
-                      <span>Số lượng</span>
-                      <span>Thành tiền</span>
-                      <DeleteOutlined style={{ cursor: 'pointer' }} onClick={handleRemoveAllOrder} />
-                    </div>
-                  </WrapperStyleHeader>
-                  <WrapperListOrder>
+          <WrapperLeft>
+            <h4>Phí giao hàng</h4>
 
+            <WrapperStyleHeaderDilivery>
+              <StepComponent items={itemsDelivery} current={diliveryPriceMemo === 10000
+                ? 2 : diliveryPriceMemo === 20000 ? 1
+                  : order.orderItemsSlected.length === 0 ? 0 : 3} />
+            </WrapperStyleHeaderDilivery>
+
+            <WrapperStyleHeader>
+              <span style={{ display: 'inline-block', width: '390px' }}>
+                <CustomCheckbox onChange={handleOnchangeCheckAll} checked={listChecked?.length === num}></CustomCheckbox>
+                <span> Tất cả ({num} sản phẩm)</span>
+              </span>
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>Đơn giá</span>
+                <span>Số lượng</span>
+                <span>Thành tiền</span>
+                <DeleteOutlined style={{ cursor: 'pointer' }} onClick={handleRemoveAllOrder} />
+              </div>
+            </WrapperStyleHeader>
+            <WrapperListOrder>
+              {order?.orderItems?.map((od) => {
+                if (od?.user?.id == user?.id) {
+                  return (
                     <WrapperItemOrder key={od?.product}>
                       <div style={{ width: '390px', display: 'flex', alignItems: 'center', gap: 4 }}>
                         <CustomCheckbox onChange={onChange} value={od?.product} checked={listChecked.includes(od?.product)}></CustomCheckbox>
@@ -256,7 +257,7 @@ const OrderPage = () => {
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap'
-                        }}>{order?.name}</div>
+                        }}>{od?.name}</div>
                       </div>
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <span>
@@ -272,15 +273,14 @@ const OrderPage = () => {
                           </button>
                         </WrapperCountOrder>
                         <span style={{ color: 'rgb(255, 66, 78)', fontSize: '13px', fontWeight: 500 }}>{convertPrice(od?.price * od?.amount)}</span>
-                        <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => handleDeleteOrder(od?.product)} />
+                        <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => handleDeleteOrder(od?.product, od?.user)} />
                       </div>
                     </WrapperItemOrder>
-
-                  </WrapperListOrder>
-                </WrapperLeft>
-              )
-            }
-          })}
+                  )
+                }
+              })}
+            </WrapperListOrder>
+          </WrapperLeft>
           <WrapperRight>
             <div style={{ width: '100%' }}>
               <WrapperInfo>
@@ -329,7 +329,7 @@ const OrderPage = () => {
         </div>
       </div>
       <ModalComponent title="Cập nhật thông tin giao hàng" open={isOpenModalUpdateInfo} onCancel={handleCancleUpdate} onOk={handleUpdateInforUser}>
-        <Loading isLoading={isLoading}>
+        <Loading isLoading={isPending}>
           <Form
             name="basic"
             labelCol={{ span: 4 }}

@@ -1,14 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { routes } from './routes'
 import DefaultComponent from './Components/DefaultComponent/DefaultComponent'
-import { useQuery } from '@tanstack/react-query'
+// import { useQuery } from '@tanstack/react-query'
 import { isJsonString } from './utils'
 import { jwtDecode } from "jwt-decode";
 import * as UserService from './service/UserService'
 import { useDispatch, useSelector } from 'react-redux'
 import Loading from './Components/LoadingComponent/Loading'
 import { resetUser, updateUser } from './redux/slide/userSlide'
+import Dashboard from './modules/Dashboard';
+import './App.css';
 // import { config } from 'dotenv';
 // config();
 
@@ -58,7 +60,18 @@ export function App() {
     const res = await UserService.getDetailUser(id, token)
     dispatch(updateUser({ ...res?.data, access_token: token }))
   }
+  const ProtectedRoute = ({ children, auth = false }) => {
+    const isLoggedIn = localStorage.getItem('access_token') !== null || false
+    if (!isLoggedIn && auth) {
+      return <Navigate to={"/sign-in"} />
+    }
+    else if (isLoggedIn && ["/sign-in", "/sign-up"].includes(window.location.pathname)) {
+      return <Navigate to={"/"} />
+    }
 
+    return children
+
+  }
   return (
     <div style={{ height: '100vh', width: '100%' }}>
       <Loading isLoading={isLoading}>
@@ -69,13 +82,20 @@ export function App() {
               {/* const isCheckAuth = !route.isPrivate || user.isAdmin */ }
               const Layout = route.isShowHeader ? DefaultComponent : Fragment
               return (
-                <Route key={route.path} path={route.path} element={
-                  <Layout>
-                    <Page />
-                  </Layout>
-                } />
+                <>
+                  <Route key={route.path} path={route.path} element={
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  } />
+                  <Route path='/messages' element={
+                    <ProtectedRoute auth={true}>
+                      <Dashboard />
+                    </ProtectedRoute>} />
+                </>
               )
             })}
+
           </Routes>
         </Router>
       </Loading>

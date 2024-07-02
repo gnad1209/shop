@@ -50,6 +50,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         <WrapperContentPopup onClick={() => handleClickNavigate('admin')}>Quản lí hệ thống</WrapperContentPopup>
       )}
       <WrapperContentPopup onClick={() => handleClickNavigate(`my-order`)}>Đơn hàng của tôi</WrapperContentPopup>
+      <WrapperContentPopup onClick={() => handleClickNavigate(`messages`)}>Tin nhắn</WrapperContentPopup>
       <WrapperContentPopup onClick={() => handleClickNavigate()}>Đăng xuất</WrapperContentPopup>
     </div>
   );
@@ -58,6 +59,13 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
       navigate('/profile-user')
     } else if (type === 'admin') {
       navigate('/system/admin')
+    } else if (type === 'messages') {
+      navigate('/messages', {
+        state: {
+          id: user?.id,
+          token: user?.access_token
+        }
+      })
     } else if (type === 'my-order') {
       navigate('/my-order', {
         state: {
@@ -79,10 +87,10 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const length = order?.orderItems?.map((order => order?.user?.id == user?.id))
   const num = length.filter(e => e == true).length
   return (
-    <div style={{ heiht: '100%', width: '100%', display: 'flex', background: '#9255FD', justifyContent: 'center' }}>
+    <div style={{ heiht: '100%', width: '100%', display: 'flex', background: 'rgb(253 155 85)', justifyContent: 'center' }}>
       <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenSearch ? 'space-between' : 'unset' }}>
         <Col span={5}>
-          <WrapperTextHeader onClick={handleNavigateHome} style={{ cursor: 'pointer' }}>SHOP</WrapperTextHeader>
+          <WrapperTextHeader onClick={handleNavigateHome} style={{ cursor: 'pointer', fontFamily: 'Brush Script MT', fontSize: '40px' }}>Danga Shop</WrapperTextHeader>
         </Col>
         {!isHiddenSearch && (
           <Col span={13}>
@@ -92,7 +100,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               textButton="Tìm kiếm"
               placeholder="input search text"
               onChange={onSearch}
-              styleButton="#5a20c1"
+              styleButton="#fd9b55"
             />
           </Col>
         )}
@@ -136,7 +144,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           )}
         </Col>
       </WrapperHeader>
-    </div>
+    </div >
   )
 }
 

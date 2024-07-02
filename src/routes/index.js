@@ -12,6 +12,7 @@ import AdminPage from '../Pages/AdminPage/AdminPage'
 import MyOrderPage from '../Pages/MyOrderPage/MyOrderPage'
 import PaymentPage from '../Pages/PaymentPage/PaymentPage'
 import DetailsOrderPage from '../Pages/DetailsOrderPage/DetailsOrderPage'
+import Dashboard from '../modules/Dashboard/index'
 
 export const routes = [
     {
@@ -80,6 +81,12 @@ export const routes = [
         isShowHeader: false,
         isPrivated: true
     },
+    // {
+    //     path: '/messages',
+    //     page: Dashboard,
+    //     isShowHeader: false,
+    //     auth: true
+    // },
     {
         path: '*',
         page: NotFoundPage

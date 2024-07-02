@@ -1,19 +1,19 @@
-import  axios  from "axios"
+import axios from "axios"
 export const axiosJWT = axios.create()
 
 export const loginUser = async (data) => {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/sign-in`,data)
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/sign-in`, data)
     return res.data
 }
 
 export const signUpUser = async (data) => {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/sign-up`,data)
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/sign-up`, data)
     return res.data
 }
 
-export const getDetailUser = async (id,access_token) => {
-    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/user/get-detail/${id}`,{
-        headers:{
+export const getDetailUser = async (id, access_token) => {
+    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/user/get-detail/${id}`, {
+        headers: {
             token: `Bearer ${access_token}`,
         }
     })
@@ -21,7 +21,7 @@ export const getDetailUser = async (id,access_token) => {
 }
 
 export const refreshToken = async (refreshToken) => {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/refresh-token`, {} , {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/refresh-token`, {}, {
         headers: {
             token: `Bearer ${refreshToken}`,
         }
@@ -40,13 +40,22 @@ export const updateUser = async (id, data, access_token) => {
             token: `Bearer ${access_token}`,
             "Content-Type": `multipart/form-data`
         },
-        
+
     })
     return res.data
 }
 
 export const getAllUser = async (access_token) => {
     const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/user/getAll`, {
+        headers: {
+            token: `Bearer ${access_token}`,
+        }
+    },)
+    return res.data
+}
+
+export const getAllFollower = async (search, access_token) => {
+    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/user/getAll?filter=email&filter=${search}`, {
         headers: {
             token: `Bearer ${access_token}`,
         }
@@ -69,5 +78,14 @@ export const deleteManyUser = async (data, access_token) => {
             token: `Bearer ${access_token}`,
         }
     })
+    return res.data
+}
+
+export const getFollower = async (id, access_token) => {
+    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/user/get-follower/${id}`, {
+        headers: {
+            token: `Bearer ${access_token}`,
+        }
+    },)
     return res.data
 }
