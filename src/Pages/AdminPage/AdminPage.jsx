@@ -89,7 +89,6 @@ const AdminPage = () => {
   const handleOnCLick = ({ key }) => {
     setKeySelected(key)
   }
-  // console.log('memoCount', memoCount)
   return (
     <>
       <HeaderComponent isHiddenSearch isHiddenCart />

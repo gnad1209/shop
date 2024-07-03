@@ -31,7 +31,7 @@ const OrderAdmin = () => {
   const { isLoading: isLoadingOrders, data: orders } = queryOrder
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({ setSelectedKeys, selectedKeys }) => (
       <div
         style={{
           padding: 8,
@@ -39,11 +39,9 @@ const OrderAdmin = () => {
         onKeyDown={(e) => e.stopPropagation()}
       >
         <InputComponent
-          // ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          // onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
             display: 'block',
@@ -52,7 +50,6 @@ const OrderAdmin = () => {
         <Space>
           <Button
             type="primary"
-            // onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
             style={{
@@ -62,7 +59,6 @@ const OrderAdmin = () => {
             Search
           </Button>
           <Button
-            // onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
             style={{
               width: 90,
@@ -84,23 +80,8 @@ const OrderAdmin = () => {
       record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
-        // setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    // render: (text) =>
-    //   searchedColumn === dataIndex ? (
-    //     // <Highlighter
-    //     //   highlightStyle={{
-    //     //     backgroundColor: '#ffc069',
-    //     //     padding: 0,
-    //     //   }}
-    //     //   searchWords={[searchText]}
-    //     //   autoEscape
-    //     //   textToHighlight={text ? text.toString() : ''}
-    //     // />
-    //   ) : (
-    //     text
-    //   ),
   });
 
   const columns = [
