@@ -27,7 +27,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         const fetcConversations = async () => {
-            const res = await fetch(``${process.env.REACT_APP_API_URL}/conversations/${user?.id}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/conversations/${user?.id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -40,7 +40,7 @@ const Dashboard = () => {
     }, [])
 
     useEffect(() => {
-        setSocket(io("http://localhost:8080"));
+        setSocket(io("https://shop-gold-eight.vercel.app"));
     }, [])
 
     useEffect(() => {
@@ -87,7 +87,7 @@ const Dashboard = () => {
             id: messages?.reciver?.id
         });
 
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/message`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/message`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
