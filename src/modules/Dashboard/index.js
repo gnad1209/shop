@@ -40,7 +40,7 @@ const Dashboard = () => {
     }, [])
 
     useEffect(() => {
-        setSocket(io("https://shop-gold-eight.vercel.app"));
+        setSocket(io("https://shop-danga.onrender.com"));
     }, [])
 
     useEffect(() => {
