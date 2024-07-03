@@ -40,7 +40,7 @@ const Dashboard = () => {
     }, [])
 
     useEffect(() => {
-        setSocket(io("https://shop-danga.onrender.com:443"));
+        setSocket(io("https://shop-danga.onrender.com"));
     }, [])
 
     useEffect(() => {
