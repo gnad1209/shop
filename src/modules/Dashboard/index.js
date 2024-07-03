@@ -27,7 +27,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         const fetcConversations = async () => {
-            const res = await fetch(`http://localhost:9000/api/conversations/${user?.id}`, {
+            const res = await fetch(``${process.env.REACT_APP_API_URL}/conversations/${user?.id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -68,7 +68,7 @@ const Dashboard = () => {
 
 
     const fetchMessages = async (conservationId, reciver) => {
-        const res = await fetch(`http://localhost:9000/api/message/${conservationId}?senderId=${user?.id}&&reciverId=${reciver?.id}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/message/${conservationId}?senderId=${user?.id}&&reciverId=${reciver?.id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -87,7 +87,7 @@ const Dashboard = () => {
             id: messages?.reciver?.id
         });
 
-        const res = await fetch(`http://localhost:9000/api/message`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/message`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
