@@ -79,7 +79,7 @@ const PaymentPage = () => {
     return 0
   }, [order, priceMemo])
 
-const diliveryPriceMemo = useMemo(() => {
+  const diliveryPriceMemo = useMemo(() => {
     if (order?.orderItems?.map(od => od?.user?.id === user?.id)) {
       if (priceMemo >= 200000 && priceMemo < 500000) {
         return 10000

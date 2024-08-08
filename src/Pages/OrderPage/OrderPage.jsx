@@ -59,6 +59,7 @@ const OrderPage = () => {
   }
 
   const handleDeleteOrder = (idProduct, user) => {
+    console.log("user", user)
     dispatch(removeOrderProduct({ idProduct, user }))
   }
 
