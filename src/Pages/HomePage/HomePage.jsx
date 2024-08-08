@@ -11,10 +11,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
 import { useDebounce } from '../../hooks/useDebounce'
 import Loading from '../../Components/LoadingComponent/Loading'
+
 const HomePage = () => {
   const searchProduct = useSelector((state) => state?.product?.search)
   const searchDebounce = useDebounce(searchProduct, 500)
-  const [loading, setLoading] = useState(false)
+  const user = useSelector((state) => state.user)
+  // const [loading, setLoading] = useState(false)
   const [limit, setLimit] = useState(6)
   const [typeProducts, setTypeProducts] = useState([])
 
@@ -46,7 +48,7 @@ const HomePage = () => {
     fetchAllTypeProduct()
   }, [])
   return (
-    <Loading isLoading={isPending || loading}>
+    <Loading isLoading={isPending}>
       <div style={{ width: '1270px', margin: '0 auto' }}>
         <WrapperTypeProduct>
           {typeProducts.map((item) => {
@@ -91,6 +93,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+
     </Loading>
   )
 }

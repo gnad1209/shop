@@ -61,7 +61,7 @@ export const WrapperQualityProduct = styled.div`
     display: flex;
     gap: 4px;
     align-items: center;
-    width: 120px;
+    width: 96px;
     border: 1px solid #ccc;
     border-radius: 4px;
 `

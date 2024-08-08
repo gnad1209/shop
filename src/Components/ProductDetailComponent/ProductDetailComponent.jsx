@@ -27,7 +27,6 @@ const ProductDetailComponent = ({ idProduct }) => {
     const onChange = (value) => {
         setNumProduct(Number(value))
     }
-
     const fetchGetDetailProduct = async (context) => {
         const id = context?.queryKey && context?.queryKey[1]
         if (id) {
@@ -70,8 +69,8 @@ const ProductDetailComponent = ({ idProduct }) => {
         }
     }
 
-    const { isPending, data: productDetails } = useQuery({ queryKey: ['product-details', idProduct], queryFn: fetchGetDetailProduct, enabled: !!idProduct })
-
+    const { isLoading, data: productDetails } = useQuery({ queryKey: ['product-details', idProduct], queryFn: fetchGetDetailProduct, enabled: !!idProduct })
+    // console.log(productDetails, user)
     const handleAddOrderProduct = () => {
         if (!user?.id) {
             navigate('/sign-in', { state: location?.pathname })
@@ -86,8 +85,10 @@ const ProductDetailComponent = ({ idProduct }) => {
                         price: productDetails?.price,
                         product: productDetails?._id,
                         discount: productDetails?.discount,
-                        countInstock: productDetails?.countInStock
-                    }
+                        countInstock: productDetails?.countInStock,
+                        user: user
+                    },
+
                 }))
             } else {
                 setErrorLimitOrder(true)
@@ -96,11 +97,11 @@ const ProductDetailComponent = ({ idProduct }) => {
     }
 
     return (
-        <Loading isLoading={isPending}>
+        <Loading isLoading={isLoading}>
             <Row style={{ padding: '16px', background: '#fff', borderRadius: '4px', height: '100%' }}>
                 <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
                     <Image src={productDetails?.image} alt="image prodcut" preview={false} />
-                    <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
+                    {/* <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
                         <WrapperStyleColImage span={4} sty>
                             <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={false} />
                         </WrapperStyleColImage>
@@ -124,13 +125,13 @@ const ProductDetailComponent = ({ idProduct }) => {
                             <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={false} />
                         </WrapperStyleColImage>
 
-                    </Row>
+                    </Row> */}
                 </Col>
                 <Col span={14} style={{ paddingLeft: '10px' }}>
                     <WrapperStyleNameProduct>{productDetails?.name}</WrapperStyleNameProduct>
                     <div>
                         <Rate allowHalf defaultValue={productDetails?.rating} value={productDetails?.rating} />
-                        <WrapperStyleTextSell> | Đã bán 1000+</WrapperStyleTextSell>
+                        <WrapperStyleTextSell> | Đã bán {productDetails?.selled}+</WrapperStyleTextSell>
                     </div>
                     <WrapperPriceProduct>
                         <WrapperPriceTextProduct>{convertPrice(productDetails?.price)}</WrapperPriceTextProduct>
@@ -181,11 +182,11 @@ const ProductDetailComponent = ({ idProduct }) => {
                                 background: '#fff',
                                 height: '48px',
                                 width: '220px',
-                                border: '1px solid rgb(13, 92, 182)',
+                                border: '1px solid rgb(253 155 85)',
                                 borderRadius: '4px'
                             }}
                             textButton={'Mua trả sau'}
-                            styleTextButton={{ color: 'rgb(13, 92, 182)', fontSize: '15px' }}
+                            styleTextButton={{ color: 'rgb(253 155 85)', fontSize: '15px' }}
                         ></ButtonComponent>
                     </div>
                 </Col>
