@@ -16,7 +16,7 @@ import './App.css';
 
 export function App() {
   const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isPending, setIsLoading] = useState(false)
   const user = useSelector((state) => state.user)
 
   useEffect(() => {
@@ -74,7 +74,7 @@ export function App() {
   }
   return (
     <div style={{ height: '100vh', width: '100%' }}>
-      <Loading isLoading={isLoading}>
+      <Loading isLoading={isPending}>
         <Router>
           <Routes>
             {routes.map((route) => {

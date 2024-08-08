@@ -60,13 +60,14 @@ const PaymentPage = () => {
   }
 
   const priceMemo = useMemo(() => {
-    const result = order?.orderItemsSlected?.reduce((total, cur) => {
-      return total + ((cur.price * cur.amount))
-    }, 0)
-    return result
+    if (order?.orderItems?.map(od => od?.user?.id == user?.id)) {
+      const result = order?.orderItemsSlected?.reduce((total, cur) => {
+        return total + ((cur.price * cur.amount))
+      }, 0)
+      return result
+    }
   }, [order])
-
-  const priceDiscountMemo = useMemo(() => {
+    const priceDiscountMemo = useMemo(() => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
       const totalDiscount = cur.discount ? cur.discount : 0
       const totalPrice = cur.price
