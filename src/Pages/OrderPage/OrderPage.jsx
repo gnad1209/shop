@@ -59,6 +59,7 @@ const OrderPage = () => {
   }
 
   const handleDeleteOrder = (idProduct, user) => {
+    console.log("user", user)
     dispatch(removeOrderProduct({ idProduct, user }))
   }
 
@@ -273,7 +274,7 @@ const OrderPage = () => {
                           </button>
                         </WrapperCountOrder>
                         <span style={{ color: 'rgb(255, 66, 78)', fontSize: '13px', fontWeight: 500 }}>{convertPrice(od?.price * od?.amount)}</span>
-                        <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => handleDeleteOrder(od?.product, od?.user)} />
+                        <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => handleDeleteOrder(od?.product, user)} />
                       </div>
                     </WrapperItemOrder>
                   )

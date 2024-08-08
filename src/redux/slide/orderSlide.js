@@ -58,9 +58,9 @@ export const orderSlide = createSlice({
     },
     removeOrderProduct: (state, action) => {
       const { idProduct, user } = action.payload
-
-      const itemOrder = state?.orderItems?.filter((item) => item?.product !== idProduct && item?.user === user)
-      const itemOrderSeleted = state?.orderItemsSlected?.filter((item) => item?.product !== idProduct && item?.user === user)
+      const itemOrder = state?.orderItems?.filter((item) => item?.product !== idProduct)
+      // const itemOrder = state?.orderItems?.filter((item) => item?.product !== idProduct && item?.user?.id !== user?.id)
+      const itemOrderSeleted = state?.orderItemsSlected?.filter((item) => item?.product !== idProduct && item?.user?.id !== user?.id)
 
       state.orderItems = itemOrder;
       state.orderItemsSlected = itemOrderSeleted;
