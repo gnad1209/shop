@@ -135,6 +135,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchUser(user?.id, user?.access_token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, user?.access_token]);
 
   const addFollower = async (senderId, reciverId) => {

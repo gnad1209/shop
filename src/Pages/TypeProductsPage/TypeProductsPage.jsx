@@ -24,7 +24,7 @@ const TypeProductPage = () => {
   const fetchProductType = async (type, page, limit) => {
     setLoading(true);
     const res = await ProductService.getProductType(type, page, limit);
-    if (res?.status == "OK") {
+    if (res?.status === "OK") {
       setLoading(false);
       setProducts(res?.data);
       setPanigate({ ...panigate, total: res?.totalPage });
@@ -37,6 +37,7 @@ const TypeProductPage = () => {
     if (type) {
       fetchProductType(type, panigate.page, panigate.limit);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, panigate.page, panigate.limit]);
 
   const onChange = (current, pageSize) => {
@@ -72,6 +73,7 @@ const TypeProductPage = () => {
             >
               <WrapperProducts>
                 {products
+                  // eslint-disable-next-line array-callback-return
                   ?.filter((pro) => {
                     if (searchDebounce === "") {
                       return pro;
