@@ -39,12 +39,12 @@ const Dashboard = () => {
     fetcConversations();
   }, [user?.id]);
 
-  // useEffect(() => {
-  //   setSocket(io("https://shop-danga.onrender.com:9000"));
-  // }, []);
   useEffect(() => {
-    setSocket(io("http://localhost:3000"));
+    setSocket(io("https://shop-danga.onrender.com:9000"));
   }, []);
+  // useEffect(() => {
+  //   setSocket(io("http://localhost:3000"));
+  // }, []);
 
   useEffect(() => {
     if (socket) {
