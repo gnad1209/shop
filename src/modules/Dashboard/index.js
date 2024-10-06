@@ -39,35 +39,41 @@ const Dashboard = () => {
     fetcConversations();
   }, [user?.id]);
 
-  // useEffect(() => {
-  //   setSocket(io("https://shop-danga.onrender.com:9000"));
-  // }, []);
   useEffect(() => {
-    setSocket(io("http://localhost:3000"));
+    setSocket(io("https://shop-danga.onrender.com:9000"));
   }, []);
+  // useEffect(() => {
+  //   setSocket(io("http://localhost:3000"));
+  // }, []);
 
   useEffect(() => {
     if (socket) {
       socket.emit("addUser", user?.id);
 
       const handleGetMessage = (data) => {
-        setMessages((prev) => ({
-          ...prev,
-          messages: [
-            ...prev?.messages,
-            { user: data.user, message: data.message },
-          ],
-        }));
+        // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không
+        if (data.conversationId === messages.conservationId) {
+          setMessages((prev) => ({
+            ...prev,
+            messages: [
+              ...prev.messages,
+              { user: data.user, message: data.message },
+            ],
+          }));
+        } else {
+          // Xử lý nếu tin nhắn không thuộc về cuộc trò chuyện hiện tại
+          console.log("Tin nhắn mới thuộc về cuộc trò chuyện khác.");
+        }
       };
 
       socket.on("getMessage", handleGetMessage);
 
-      // Cleanup function to remove the event listener when component unmounts
+      // Cleanup function để loại bỏ listener khi component unmount
       return () => {
         socket.off("getMessage", handleGetMessage);
       };
     }
-  }, [socket, user?.id]);
+  }, [socket, messages.conservationId, user?.id]);
 
   useEffect(() => {
     setLoading(false);
@@ -86,19 +92,31 @@ const Dashboard = () => {
     );
     const resData = await res.json();
     setMessages({ messages: resData, reciver, conservationId });
+    console.log(messages);
   };
 
   const sendMessage = async () => {
     if (!message.trim()) return; // Kiểm tra xem tin nhắn có rỗng không
-    setMessage("");
-
-    // Gửi tin nhắn qua socket
-    socket?.emit("sendMessage", {
+    const newMessage = {
       conversationId: messages?.conservationId,
       senderId: user?.id,
       message,
-      reciverId: messages?.reciver?._id,
-    });
+      reciverId: messages?.reciver?.reciverId,
+    };
+
+    // Gửi tin nhắn qua socket
+    socket?.emit("sendMessage", newMessage);
+
+    // Cập nhật state messages để hiển thị tin nhắn mới ngay lập tức
+    setMessages((prev) => ({
+      ...prev,
+      messages: [
+        ...prev.messages,
+        { user: { id: user.id }, message }, // Giả sử bạn có thể cấu trúc lại message object tùy theo cấu trúc của bạn
+      ],
+    }));
+
+    setMessage(""); // Xóa nội dung trong input sau khi gửi
 
     // Gửi tin nhắn đến server
     await fetch(`${process.env.REACT_APP_API_URL}/message`, {
@@ -106,12 +124,7 @@ const Dashboard = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        conversationId: messages?.conservationId,
-        senderId: user?.id,
-        message,
-        reciverId: messages?.reciver?._id,
-      }),
+      body: JSON.stringify(newMessage),
     });
   };
 
@@ -135,6 +148,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchUser(user?.id, user?.access_token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, user?.access_token]);
 
   const addFollower = async (senderId, reciverId) => {
