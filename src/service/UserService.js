@@ -30,7 +30,7 @@ export const getDetailUser = async (id, access_token) => {
 };
 
 export const refreshToken = async (refreshToken) => {
-  const res = await axios.post(
+  const res = await axiosJWT.post(
     `${process.env.REACT_APP_API_URL}/user/refresh-token`,
     {},
     {
@@ -64,18 +64,6 @@ export const updateUser = async (id, data, access_token) => {
 export const getAllUser = async (access_token) => {
   const res = await axiosJWT.get(
     `${process.env.REACT_APP_API_URL}/user/getAll`,
-    {
-      headers: {
-        token: `Bearer ${access_token}`,
-      },
-    }
-  );
-  return res.data;
-};
-
-export const getAllFollower = async (search, access_token) => {
-  const res = await axiosJWT.get(
-    `${process.env.REACT_APP_API_URL}/user/getAll?filter=email&filter=${search}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -120,5 +108,19 @@ export const getFollower = async (id, access_token) => {
       },
     }
   );
+  return res.data;
+};
+
+export const getUserInMessage = async (id, filter) => {
+  let res = {};
+  if (filter) {
+    res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/user/get-user-message/${id}?name=${filter}`
+    );
+  } else {
+    res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/user/get-user-message/${id}`
+    );
+  }
   return res.data;
 };

@@ -15,7 +15,7 @@ import * as UserService from "../../service/UserService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import Loading from "../../Components/LoadingComponent/Loading";
 import { jwtDecode } from "jwt-decode";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slide/userSlide";
 
 const SignInPage = () => {
@@ -49,6 +49,7 @@ const SignInPage = () => {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   const handleGetDetailUser = async (id, token) => {
@@ -75,6 +76,12 @@ const SignInPage = () => {
       email,
       password,
     });
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSignIn();
+    }
   };
 
   return (
@@ -104,6 +111,7 @@ const SignInPage = () => {
             placeholder="abc@gmail.com"
             value={email}
             onChange={handleOnchangeEmail}
+            onKeyPress={handleKeyPress}
           />
           <div style={{ position: "relative" }}>
             <span
@@ -124,6 +132,7 @@ const SignInPage = () => {
               type={isShowPassword ? "text" : "password"}
               value={password}
               onChange={handleOnchangePassword}
+              onKeyPress={handleKeyPress}
             />
           </div>
           {data?.status === "ERR" && (
