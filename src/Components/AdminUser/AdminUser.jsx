@@ -70,7 +70,7 @@ const AdminUser = () => {
   });
 
   const fetchGetDetailsUser = async (rowSelected) => {
-    const res = await UserService.getDetailUser(rowSelected);
+    const res = await UserService.getDetailUser(rowSelected, user.access_token);
     if (res?.data) {
       setStateUserDetails({
         name: res?.data?.name,
@@ -93,6 +93,7 @@ const AdminUser = () => {
       setIsLoadingUpdate(true);
       fetchGetDetailsUser(rowSelected);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowSelected, isOpenDrawer]);
 
   const handleDetailsProduct = () => {
@@ -362,7 +363,6 @@ const AdminUser = () => {
       }
     );
   };
-
   return (
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>

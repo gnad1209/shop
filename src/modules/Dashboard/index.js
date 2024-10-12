@@ -20,7 +20,7 @@ const Dashboard = () => {
   const messageRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState([]);
 
   useEffect(() => {
     const fetcConversations = async () => {
@@ -130,19 +130,25 @@ const Dashboard = () => {
 
   const fetchUser = async (id, token) => {
     if (search) {
-      const res = await UserService.getAllFollower(search, user?.access_token);
+      const res = await UserService.getUserInMessage(id, search);
       if (res?.status === "OK") {
-        setUsers(res?.data, conversations);
+        setUsers(res?.data?.findUser, conversations);
       } else {
-        setUsers(null);
+        setUsers([]);
       }
     } else {
       const res = await UserService.getFollower(id, token);
       if (res?.status === "OK") {
         setUsers(res?.data, conversations);
       } else {
-        setUsers(null);
+        setUsers([]);
       }
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
     }
   };
 
@@ -170,7 +176,13 @@ const Dashboard = () => {
 
   const onSearch = (e) => {
     setSearch(e.target.value);
+    fetchUser(user?.id, e.target.value, user?.access_token);
   };
+
+  useEffect(() => {
+    fetchUser(user?.id, search, user?.access_token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, search, user?.access_token]);
 
   return (
     <div className="w-screen flex">
@@ -339,6 +351,7 @@ const Dashboard = () => {
               onChange={(e) => {
                 setMessage(e.target.value);
               }}
+              handleKeyPress={handleKeyPress}
               className="w-[75%]"
               InputclassName="p-4 border-0 shadow-md rounded-full bg-light focus:ring-0 focus:border-0 outline-none"
             />

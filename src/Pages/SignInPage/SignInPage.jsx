@@ -15,8 +15,9 @@ import * as UserService from "../../service/UserService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import Loading from "../../Components/LoadingComponent/Loading";
 import { jwtDecode } from "jwt-decode";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slide/userSlide";
+import { GoogleLogin } from "@react-oauth/google";
 import * as messages from "../../Components/Message/Message";
 
 const SignInPage = () => {
@@ -25,6 +26,7 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const location = useLocation();
+  const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   // const user = useSelector((state) => state.user)
 
   const navigate = useNavigate();
@@ -54,6 +56,7 @@ const SignInPage = () => {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   const handleGetDetailUser = async (id, token) => {
@@ -76,12 +79,50 @@ const SignInPage = () => {
   };
 
   const handleSignIn = () => {
-    mutation.mutate({
-      email,
-      password,
-    });
+    if (!isGoogleLogin) {
+      mutation.mutate({
+        email,
+        password,
+      });
+    }
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSignIn();
+    }
+  };
+  const handleSuccess = async (credentialResponse) => {
+    setIsGoogleLogin(true);
+    try {
+      const data = await UserService.ggLogin({
+        token: credentialResponse.credential,
+      });
+      if (data.status === "OK") {
+        // Xử lý sau khi đăng nhập thành công
+        navigate("/");
+        localStorage.setItem(
+          "access_token",
+          JSON.stringify(data?.access_token)
+        );
+        localStorage.setItem(
+          "refresh_token",
+          JSON.stringify(data?.refresh_token)
+        );
+        if (data?.access_token) {
+          const decoded = jwtDecode(data?.access_token);
+          if (decoded?.id) {
+            handleGetDetailUser(decoded?.id, data?.access_token);
+          }
+        }
+      }
+    } catch (e) {
+      return e;
+    }
+  };
+  const handleError = () => {
+    messages.error("Đăng nhập thất bại");
+  };
   return (
     <div
       style={{
@@ -109,6 +150,7 @@ const SignInPage = () => {
             placeholder="abc@gmail.com"
             value={email}
             onChange={handleOnchangeEmail}
+            onKeyPress={handleKeyPress}
           />
           <div style={{ position: "relative" }}>
             <span
@@ -129,6 +171,7 @@ const SignInPage = () => {
               type={isShowPassword ? "text" : "password"}
               value={password}
               onChange={handleOnchangePassword}
+              onKeyPress={handleKeyPress}
             />
           </div>
           {data?.status === "ERR" && (
@@ -167,9 +210,12 @@ const SignInPage = () => {
               Tạo tài khoản
             </WrapperTextLight>
           </p>
-          <a href="/auth/google" class="btn btn-danger">
-            <span class="fa fa-google"></span> SignIn with Google
-          </a>
+          <GoogleLogin
+            class=""
+            maxCount={1}
+            onSuccess={handleSuccess}
+            onError={handleError}
+          />
           <br />
           <a href="/auth/facebook" class="btn btn-primary">
             <span class="fa fa-facebook"></span> SignIn with Facebook
