@@ -17,6 +17,8 @@ import Loading from "../../Components/LoadingComponent/Loading";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slide/userSlide";
+import { GoogleLogin } from "@react-oauth/google";
+import * as messages from "../../Components/Message/Message";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -24,6 +26,7 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const location = useLocation();
+  const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   // const user = useSelector((state) => state.user)
 
   const navigate = useNavigate();
@@ -34,6 +37,10 @@ const SignInPage = () => {
     if (isSuccess) {
       if (location?.state) {
         navigate(location?.state);
+      } else if (data.message === "The input is email") {
+        messages.error("Không tìm thấy tài khoản");
+      } else if (data.message === "the password is incorrect") {
+        messages.error("Mật khẩu không chính xác");
       } else {
         navigate("/");
       }
@@ -72,10 +79,12 @@ const SignInPage = () => {
   };
 
   const handleSignIn = () => {
-    mutation.mutate({
-      email,
-      password,
-    });
+    if (!isGoogleLogin) {
+      mutation.mutate({
+        email,
+        password,
+      });
+    }
   };
 
   const handleKeyPress = (event) => {
@@ -83,7 +92,37 @@ const SignInPage = () => {
       handleSignIn();
     }
   };
-
+  const handleSuccess = async (credentialResponse) => {
+    setIsGoogleLogin(true);
+    try {
+      const data = await UserService.ggLogin({
+        token: credentialResponse.credential,
+      });
+      if (data.status === "OK") {
+        // Xử lý sau khi đăng nhập thành công
+        navigate("/");
+        localStorage.setItem(
+          "access_token",
+          JSON.stringify(data?.access_token)
+        );
+        localStorage.setItem(
+          "refresh_token",
+          JSON.stringify(data?.refresh_token)
+        );
+        if (data?.access_token) {
+          const decoded = jwtDecode(data?.access_token);
+          if (decoded?.id) {
+            handleGetDetailUser(decoded?.id, data?.access_token);
+          }
+        }
+      }
+    } catch (e) {
+      return e;
+    }
+  };
+  const handleError = () => {
+    messages.error("Đăng nhập thất bại");
+  };
   return (
     <div
       style={{
@@ -171,9 +210,12 @@ const SignInPage = () => {
               Tạo tài khoản
             </WrapperTextLight>
           </p>
-          <a href="/auth/google" class="btn btn-danger">
-            <span class="fa fa-google"></span> SignIn with Google
-          </a>
+          <GoogleLogin
+            class=""
+            maxCount={1}
+            onSuccess={handleSuccess}
+            onError={handleError}
+          />
           <br />
           <a href="/auth/facebook" class="btn btn-primary">
             <span class="fa fa-facebook"></span> SignIn with Facebook

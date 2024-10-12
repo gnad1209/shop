@@ -124,3 +124,11 @@ export const getUserInMessage = async (id, filter) => {
   }
   return res.data;
 };
+
+export const ggLogin = async (data) => {
+  const res = await axios.post(
+    `${process.env.REACT_APP_API_URL}/user/gg-login`,
+    data
+  );
+  return res.data;
+};
