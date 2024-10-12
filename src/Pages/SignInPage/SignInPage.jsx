@@ -17,6 +17,7 @@ import Loading from "../../Components/LoadingComponent/Loading";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../redux/slide/userSlide";
+import * as messages from "../../Components/Message/Message";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -34,6 +35,10 @@ const SignInPage = () => {
     if (isSuccess) {
       if (location?.state) {
         navigate(location?.state);
+      } else if (data.message === "the email is not defined") {
+        messages.error("email không tồn tại");
+      } else if (data.message === "the password is incorrect") {
+        messages.error("password không đúng");
       } else {
         navigate("/");
       }

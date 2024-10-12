@@ -75,76 +75,98 @@ const ProductDetailComponent = ({ idProduct }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order.isSucessOrder]);
 
-    const handleChangeCount = (type, limited) => {
-        if (type === 'increase') {
-            if (!limited) {
-                setNumProduct(numProduct + 1)
-            }
-        } else {
-            if (!limited) {
-                setNumProduct(numProduct - 1)
-            }
-        }
-    }
-
-    const { isLoading, data: productDetails } = useQuery({ queryKey: ['product-details', idProduct], queryFn: fetchGetDetailProduct, enabled: !!idProduct })
-    // console.log(productDetails, user)
-    const handleAddOrderProduct = () => {
-        if (!user?.id) {
-            navigate('/sign-in', { state: location?.pathname })
-        } else {
-            const orderRedux = order?.orderItems?.find((item) => item.product === productDetails?._id)
-            if ((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
-                dispatch(addOrderProduct({
-                    orderItem: {
-                        name: productDetails?.name,
-                        amount: numProduct,
-                        image: productDetails?.image,
-                        price: productDetails?.price,
-                        product: productDetails?._id,
-                        discount: productDetails?.discount,
-                        countInstock: productDetails?.countInStock,
-                        user: user
-                    },
-
-                }))
-            } else {
-                setErrorLimitOrder(true)
-            }
-        }
+  const handleChangeCount = (type, limited) => {
+    if (type === "increase") {
+      if (!limited) {
+        setNumProduct(numProduct + 1);
+      }
+    } else {
+      if (!limited) {
+        setNumProduct(numProduct - 1);
+      }
     }
   };
 
-    return (
-        <Loading isLoading={isLoading}>
-            <Row style={{ padding: '16px', background: '#fff', borderRadius: '4px', height: '100%' }}>
-                <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
-                    <Image src={productDetails?.image} alt="image prodcut" preview={false} />
-                    {/* <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
-                        <WrapperStyleColImage span={4} sty>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
-                        </WrapperStyleColImage>
-                        <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
-                        </WrapperStyleColImage>
+  const { isLoading, data: productDetails } = useQuery({
+    queryKey: ["product-details", idProduct],
+    queryFn: fetchGetDetailProduct,
+    enabled: !!idProduct,
+  });
+  // console.log(productDetails, user)
+  const handleAddOrderProduct = () => {
+    if (!user?.id) {
+      navigate("/sign-in", { state: location?.pathname });
+    } else {
+      const orderRedux = order?.orderItems?.find(
+        (item) => item.product === productDetails?._id
+      );
+      if (
+        orderRedux?.amount + numProduct <= orderRedux?.countInstock ||
+        (!orderRedux && productDetails?.countInStock > 0)
+      ) {
+        dispatch(
+          addOrderProduct({
+            orderItem: {
+              name: productDetails?.name,
+              amount: numProduct,
+              image: productDetails?.image,
+              price: productDetails?.price,
+              product: productDetails?._id,
+              discount: productDetails?.discount,
+              countInstock: productDetails?.countInStock,
+              user: user,
+            },
+          })
+        );
+      } else {
+        setErrorLimitOrder(true);
+      }
+    }
+  };
+  return (
+    <Loading isLoading={isLoading}>
+      <Row
+        style={{
+          padding: "16px",
+          background: "#fff",
+          borderRadius: "4px",
+          height: "100%",
+        }}
+      >
+        <Col
+          span={10}
+          style={{ borderRight: "1px solid #e5e5e5", paddingRight: "8px" }}
+        >
+          <Image
+            src={productDetails?.image}
+            alt="image prodcut"
+            preview={false}
+          />
+          {/* <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
+                      <WrapperStyleColImage span={4} sty>
+                          <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
+                      </WrapperStyleColImage>
+                      <WrapperStyleColImage span={4}>
+                          <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
+                      </WrapperStyleColImage>
 
-                        <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
-                        </WrapperStyleColImage>
+                      <WrapperStyleColImage span={4}>
+                          <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
+                      </WrapperStyleColImage>
 
-                        <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
-                        </WrapperStyleColImage>
+                      <WrapperStyleColImage span={4}>
+                          <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
+                      </WrapperStyleColImage>
 
-                        <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
-                        </WrapperStyleColImage>
+                      <WrapperStyleColImage span={4}>
+                          <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
+                      </WrapperStyleColImage>
 
-                        <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
-                        </WrapperStyleColImage>
+                      <WrapperStyleColImage span={4}>
+                          <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={true} />
+                      </WrapperStyleColImage>
 
-                    </Row> */}
+                  </Row> */}
         </Col>
         <Col span={14} style={{ paddingLeft: "10px" }}>
           <WrapperStyleNameProduct>

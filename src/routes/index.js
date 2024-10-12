@@ -1,19 +1,3 @@
-<<<<<<< HEAD
-import HomePage from '../pages/HomePage/HomePage'
-import OrderPage from '../pages/OrderPage/OrderPage'
-import ProductsPage from '../pages/ProductsPage/ProductsPage'
-import NotFoundPage from '../pages/NotFoundPage/NotFoundPage'
-import OrderSucess from '../pages/OrderSucess/OrderSucess'
-import TypeProductPage from '../pages/TypeProductsPage/TypeProductsPage'
-import SignInPage from '../pages/SignInPage/SignInPage'
-import SignUpPage from '../pages/SignUpPage/SignUpPage'
-import ProductDetailPage from '../pages/ProductDetailPage/ProductDetailPage'
-import ProfilePage from '../pages/ProfilePage/ProfilePage'
-import AdminPage from '../pages/AdminPage/AdminPage'
-import MyOrderPage from '../pages/MyOrderPage/MyOrderPage'
-import DetailsOrderPage from '../pages/DetailsOrderPage/DetailsOrderPage'
-import PaymentPage from '../pages/PaymentPage/PaymentPage'
-=======
 import HomePage from "../Pages/HomePage/HomePage";
 import OrderPage from "../Pages/OrderPage/OrderPage";
 import ProductsPage from "../Pages/ProductsPage/ProductsPage";
@@ -29,7 +13,6 @@ import MyOrderPage from "../Pages/MyOrderPage/MyOrderPage";
 import PaymentPage from "../Pages/PaymentPage/PaymentPage";
 import DetailsOrderPage from "../Pages/DetailsOrderPage/DetailsOrderPage";
 import Dashboard from "../modules/Dashboard/index";
->>>>>>> 9f06d4843b16a9e0930c90c0739f03e4383bb019
 
 export const routes = [
   {
