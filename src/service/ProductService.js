@@ -34,7 +34,12 @@ export const getAllTypeProduct = async () => {
 export const createProduct = async (data) => {
   const res = await axios.post(
     `${process.env.REACT_APP_API_URL}/product/create`,
-    data
+    data,
+    {
+      headers: {
+        "Content-Type": `multipart/form-data`,
+      },
+    }
   );
   return res.data;
 };
@@ -53,6 +58,7 @@ export const updateProduct = async (id, access_token, data) => {
     {
       headers: {
         token: `Bearer ${access_token}`,
+        "Content-Type": `multipart/form-data`,
       },
     }
   );

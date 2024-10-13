@@ -44,7 +44,6 @@ const ProfilePage = () => {
     setAvatar(user?.avatar);
     setPreviewUrl(user?.avatar);
   }, [user]);
-
   useEffect(() => {
     if (isSuccess) {
       message.success();

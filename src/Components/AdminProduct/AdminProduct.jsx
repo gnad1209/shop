@@ -28,6 +28,8 @@ const AdminProduct = () => {
   // eslint-disable-next-line no-unused-vars
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [image, setImage] = useState("");
   const user = useSelector((state) => state?.user);
   const searchInput = useRef(null);
   const inittial = () => ({
@@ -45,8 +47,7 @@ const AdminProduct = () => {
   const [stateProductDetails, setStateProductDetails] = useState(inittial());
 
   const [form] = Form.useForm();
-
-  const mutation = useMutationHooks((data) => {
+  const mutation = useMutationHooks(async (data) => {
     const {
       name,
       price,
@@ -57,7 +58,7 @@ const AdminProduct = () => {
       countInStock,
       discount,
     } = data;
-    const res = ProductService.createProduct({
+    const res = await ProductService.createProduct({
       name,
       price,
       description,
@@ -69,21 +70,21 @@ const AdminProduct = () => {
     });
     return res;
   });
-  const mutationUpdate = useMutationHooks((data) => {
+  const mutationUpdate = useMutationHooks(async (data) => {
     const { id, token, ...rests } = data;
-    const res = ProductService.updateProduct(id, token, { ...rests });
+    const res = await ProductService.updateProduct(id, token, { ...rests });
     return res;
   });
 
-  const mutationDeleted = useMutationHooks((data) => {
+  const mutationDeleted = useMutationHooks(async (data) => {
     const { id, token } = data;
-    const res = ProductService.deleteProduct(id, token);
+    const res = await ProductService.deleteProduct(id, token);
     return res;
   });
 
-  const mutationDeletedMany = useMutationHooks((data) => {
+  const mutationDeletedMany = useMutationHooks(async (data) => {
     const { token, ...ids } = data;
-    const res = ProductService.deleteManyProduct(ids, token);
+    const res = await ProductService.deleteManyProduct(ids, token);
     return res;
   });
 
@@ -121,6 +122,8 @@ const AdminProduct = () => {
     if (rowSelected && isOpenDrawer) {
       setIsLoadingUpdate(true);
       fetchGetDetailsProduct(rowSelected);
+      setImage(rowSelected?.image);
+      setPreviewUrl(rowSelected?.image);
     }
   }, [rowSelected, isOpenDrawer]);
 
@@ -438,7 +441,6 @@ const AdminProduct = () => {
       [e.target.name]: e.target.value,
     });
   };
-
   const handleOnchangeDetails = (e) => {
     setStateProductDetails({
       ...stateProductDetails,
@@ -462,6 +464,7 @@ const AdminProduct = () => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
+    setImage(file.originFileObj);
     setStateProductDetails({
       ...stateProductDetails,
       image: file.preview,
@@ -469,7 +472,18 @@ const AdminProduct = () => {
   };
   const onUpdateProduct = () => {
     mutationUpdate.mutate(
-      { id: rowSelected, token: user?.access_token, ...stateProductDetails },
+      {
+        id: rowSelected,
+        token: user?.access_token,
+        countInStock: stateProductDetails?.countInStock,
+        description: stateProductDetails?.description,
+        discount: stateProductDetails?.discount,
+        name: stateProductDetails?.name,
+        price: stateProductDetails?.price,
+        rating: stateProductDetails?.rating,
+        type: stateProductDetails?.type,
+        image: image,
+      },
       {
         onSettled: () => {
           queryProduct.refetch();
@@ -652,9 +666,9 @@ const AdminProduct = () => {
             >
               <WrapperUploadFile onChange={handleOnchangeAvatar} maxCount={1}>
                 <Button>Select File</Button>
-                {stateProduct?.image && (
+                {stateProduct && (
                   <img
-                    src={stateProduct?.image}
+                    src={stateProduct.image}
                     style={{
                       height: "60px",
                       width: "60px",
