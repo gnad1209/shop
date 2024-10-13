@@ -92,7 +92,6 @@ const Dashboard = () => {
     );
     const resData = await res.json();
     setMessages({ messages: resData, reciver, conservationId });
-    console.log(messages);
   };
 
   const sendMessage = async () => {
@@ -101,7 +100,9 @@ const Dashboard = () => {
       conversationId: messages?.conservationId,
       senderId: user?.id,
       message,
-      reciverId: messages?.reciver?.reciverId,
+      reciverId: messages?.reciver?.reciverId
+        ? messages?.reciver?.reciverId
+        : messages?.reciver?._id,
     };
 
     // Gửi tin nhắn qua socket
@@ -145,7 +146,6 @@ const Dashboard = () => {
       }
     }
   };
-
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       sendMessage();
@@ -422,50 +422,97 @@ const Dashboard = () => {
         </div>
 
         <div className=" text-primary text-lg">
-          {users && users.length > 0 ? (
-            users.map((u) => {
-              return (
-                <div
-                  className="flex items-center py-8 border-b border-b-gray-300"
-                  key={u._id}
-                >
-                  <div className="flex items-center w-full">
-                    <div>
-                      <img
-                        className="cursor-pointer"
-                        src={u?.avatar}
-                        alt="avatar"
-                        style={{
-                          height: "60px",
-                          width: "60px",
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                        }}
+          {(users[0] && users[0]?.length > 0) ||
+          (users && users?.length > 0) ? (
+            users ? (
+              users.map((u) => {
+                return (
+                  <div
+                    className="flex items-center py-8 border-b border-b-gray-300"
+                    key={u?._id}
+                  >
+                    <div className="flex items-center w-full">
+                      <div>
+                        <img
+                          className="cursor-pointer"
+                          src={u?.avatar}
+                          alt="avatar"
+                          style={{
+                            height: "60px",
+                            width: "60px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                          }}
+                          onClick={() => {
+                            fetchMessages("new", u);
+                          }}
+                        />
+                      </div>
+
+                      <div className="ml-6 flex-grow">
+                        <h3 className="text-xl font-semibold">{u?.name}</h3>
+                        <p className="text-sm font-light text-gray-600">
+                          {u?.email}
+                        </p>
+                      </div>
+
+                      <div
+                        className="cursor-pointer ml-auto"
                         onClick={() => {
-                          fetchMessages("new", u);
+                          addFollower(user.id, u._id);
                         }}
-                      />
-                    </div>
-
-                    <div className="ml-6 flex-grow">
-                      <h3 className="text-xl font-semibold">{u?.name}</h3>
-                      <p className="text-sm font-light text-gray-600">
-                        {user?.email}
-                      </p>
-                    </div>
-
-                    <div
-                      className="cursor-pointer ml-auto"
-                      onClick={() => {
-                        addFollower(user.id, u._id);
-                      }}
-                    >
-                      <PlusCircleOutlined />
+                      >
+                        <PlusCircleOutlined />
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              })
+            ) : (
+              users[0].map((u) => {
+                return (
+                  <div
+                    className="flex items-center py-8 border-b border-b-gray-300"
+                    key={u?._id}
+                  >
+                    <div className="flex items-center w-full">
+                      <div>
+                        <img
+                          className="cursor-pointer"
+                          src={u?.avatar}
+                          alt="avatar"
+                          style={{
+                            height: "60px",
+                            width: "60px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                          }}
+                          onClick={() => {
+                            fetchMessages("new", u);
+                          }}
+                        />
+                      </div>
+
+                      <div className="ml-6 flex-grow">
+                        <h3 className="text-xl font-semibold">{u?.name}</h3>
+                        <p className="text-sm font-light text-gray-600">
+                          {u?.email}
+                        </p>
+                      </div>
+
+                      <div
+                        className="cursor-pointer ml-auto"
+                        onClick={() => {
+                          addFollower(user.id, u._id);
+                        }}
+                      >
+                        <PlusCircleOutlined />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )
           ) : (
             <div className="text-center text-lg font-semibold mt-24">
               {" "}
