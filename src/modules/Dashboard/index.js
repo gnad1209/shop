@@ -222,7 +222,7 @@ const Dashboard = () => {
         <div className="mx-14 mt-10">
           Messages
           <div className=" text-primary text-lg">
-            {conversations.length > 0 ? (
+            {conversations && conversations.length > 0 ? (
               conversations.map(({ conversationId, user }) => {
                 return (
                   <div
@@ -317,7 +317,7 @@ const Dashboard = () => {
         <div className="h-[75%]  w-full overflow-scroll border-b shadow-sm">
           <div className="p-14">
             <Loading isLoading={isLoading}>
-              {messages?.messages?.length > 0 ? (
+              {messages?.messages && messages?.messages?.length > 0 ? (
                 messages?.messages?.map(
                   ({ message, user: { id } = {} }, index) => {
                     return (
@@ -422,7 +422,7 @@ const Dashboard = () => {
         </div>
 
         <div className=" text-primary text-lg">
-          {users.length > 0 ? (
+          {users && users.length > 0 ? (
             users.map((u) => {
               return (
                 <div

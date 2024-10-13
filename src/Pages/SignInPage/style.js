@@ -31,3 +31,28 @@ export const WrapperTextLight = styled.span`
   font-size: 13px;
   cursor: pointer;
 `;
+
+export const WrapperGG = styled.span`
+  & .nsm7Bb-HzV7m-LgbsSe {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #db4437; /* Google Red */
+    color: white;
+  }
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+export const WrapperFB = styled.span`
+  position: 'relative' 
+  &:hover {
+    opacity: 0.9;
+  }
+`;
