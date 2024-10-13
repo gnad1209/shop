@@ -132,7 +132,7 @@ const Dashboard = () => {
     if (search) {
       const res = await UserService.getUserInMessage(id, search);
       if (res?.status === "OK") {
-        setUsers(res?.data?.findUser, conversations);
+        setUsers(res?.data, conversations);
       } else {
         setUsers([]);
       }

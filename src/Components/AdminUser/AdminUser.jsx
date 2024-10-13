@@ -28,6 +28,7 @@ const AdminUser = () => {
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const user = useSelector((state) => state?.user);
   const searchInput = useRef(null);
+  const [image, setImage] = useState("");
 
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
@@ -91,6 +92,7 @@ const AdminUser = () => {
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
       setIsLoadingUpdate(true);
+      setImage(rowSelected?.image);
       fetchGetDetailsUser(rowSelected);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -348,6 +350,7 @@ const AdminUser = () => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
+    setImage(file.originFileObj);
     setStateUserDetails({
       ...stateUserDetails,
       avatar: file.preview,
@@ -355,7 +358,15 @@ const AdminUser = () => {
   };
   const onUpdateUser = () => {
     mutationUpdate.mutate(
-      { id: rowSelected, token: user?.access_token, ...stateUserDetails },
+      {
+        id: rowSelected,
+        token: user?.access_token,
+        name: stateUserDetails?.name,
+        email: stateUserDetails?.email,
+        phone: stateUserDetails?.phone,
+        address: stateUserDetails?.address,
+        avatar: image,
+      },
       {
         onSettled: () => {
           queryClient.invalidateQueries(["users"]);
