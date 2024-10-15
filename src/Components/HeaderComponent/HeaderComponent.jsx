@@ -115,6 +115,10 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         display: "flex",
         background: "rgb(253 155 85)",
         justifyContent: "center",
+        position: "fixed",
+        zIndex: 1000,
+        top: 0,
+        height: `60px`,
       }}
     >
       <WrapperHeader
