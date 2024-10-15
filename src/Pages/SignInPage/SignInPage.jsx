@@ -30,6 +30,7 @@ const SignInPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
+  const [isFbLogin, setIsFbLogin] = useState(false);
   // const user = useSelector((state) => state.user)
 
   const navigate = useNavigate();
@@ -82,7 +83,7 @@ const SignInPage = () => {
   };
 
   const handleSignIn = () => {
-    if (!isGoogleLogin) {
+    if (!isGoogleLogin & !isFbLogin) {
       mutation.mutate({
         email,
         password,
@@ -131,31 +132,27 @@ const SignInPage = () => {
 
   const handleResponseFb = async (data) => {
     try {
-      console.log({
-        name: data.name,
-        email: data.email,
-        avatar: data.picture.data.url,
-      });
+      setIsFbLogin(true);
       const result = await UserService.fbLogin({
         name: data.name,
         email: data.email,
         avatar: data.picture.data.url,
       });
-      if (data.status === "OK") {
+      if (result.status === "OK") {
         // Xử lý sau khi đăng nhập thành công
         navigate("/");
         localStorage.setItem(
           "access_token",
-          JSON.stringify(data?.access_token)
+          JSON.stringify(result?.access_token)
         );
         localStorage.setItem(
           "refresh_token",
-          JSON.stringify(data?.refresh_token)
+          JSON.stringify(result?.refresh_token)
         );
-        if (data?.access_token) {
-          const decoded = jwtDecode(data?.access_token);
+        if (result?.access_token) {
+          const decoded = jwtDecode(result?.access_token);
           if (decoded?.id) {
-            handleGetDetailUser(decoded?.id, data?.access_token);
+            handleGetDetailUser(decoded?.id, result?.access_token);
           }
         }
       }
