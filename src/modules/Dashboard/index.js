@@ -40,7 +40,19 @@ const Dashboard = () => {
   }, [user?.id]);
 
   useEffect(() => {
-    setSocket(io("https://shop-danga.onrender.com:9000"));
+    const socketInstance = io(`${process.env.REACT_APP_API_URL}:9000`);
+
+    socketInstance.on("connect", () => {
+      console.log("Connected to socket server");
+    });
+
+    socketInstance.on("connect_error", (error) => {
+      console.error("Connection error:", error);
+    });
+    setSocket(io(socketInstance), { transports: ["polling", "websocket"] });
+    return () => {
+      socketInstance.disconnect(); // Dọn dẹp kết nối khi component unmount
+    };
   }, []);
   // useEffect(() => {
   //   setSocket(io("http://localhost:3000"));

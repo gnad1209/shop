@@ -1,119 +1,125 @@
-import { Menu } from 'antd'
-import React, { useState } from 'react'
-import { getItem } from '../../utils';
-import { UserOutlined, AppstoreOutlined, ShoppingCartOutlined } from '@ant-design/icons'
-import HeaderComponent from '../../Components/HeaderComponent/HeaderComponent';
-import AdminUser from '../../Components/AdminUser/AdminUser';
-import AdminProduct from '../../Components/AdminProduct/AdminProduct';
-import OrderAdmin from '../../Components/OrderAdmin/OrderAdmin';
-import * as OrderService from '../../service/OrderService'
-import * as ProductService from '../../service/ProductService'
-import * as UserService from '../../service/UserService'
+import { Menu } from "antd";
+import React, { useState } from "react";
+import { getItem } from "../../utils";
+import {
+  UserOutlined,
+  AppstoreOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
+import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
+import AdminUser from "../../Components/AdminUser/AdminUser";
+import AdminProduct from "../../Components/AdminProduct/AdminProduct";
+import OrderAdmin from "../../Components/OrderAdmin/OrderAdmin";
+import * as OrderService from "../../service/OrderService";
+import * as ProductService from "../../service/ProductService";
+import * as UserService from "../../service/UserService";
 
-import CustomizedContent from './components/CustomizedContent';
-import { useSelector } from 'react-redux';
-import { useQueries } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import Loading from '../../Components/LoadingComponent/Loading';
-
+import CustomizedContent from "./components/CustomizedContent";
+import { useSelector } from "react-redux";
+import { useQueries } from "@tanstack/react-query";
+import { useMemo } from "react";
+import Loading from "../../Components/LoadingComponent/Loading";
 
 const AdminPage = () => {
-  const user = useSelector((state) => state?.user)
+  const user = useSelector((state) => state?.user);
 
   const items = [
-    getItem('Người dùng', 'users', <UserOutlined />),
-    getItem('Sản phẩm', 'products', <AppstoreOutlined />),
-    getItem('Đơn hàng', 'orders', <ShoppingCartOutlined />),
-
+    getItem("Người dùng", "users", <UserOutlined />),
+    getItem("Sản phẩm", "products", <AppstoreOutlined />),
+    getItem("Đơn hàng", "orders", <ShoppingCartOutlined />),
   ];
-  const [keySelected, setKeySelected] = useState('');
+  const [keySelected, setKeySelected] = useState("");
   const getAllOrder = async () => {
-    const res = await OrderService.getAllOrder(user?.access_token)
-    return { data: res?.data, key: 'orders' }
-  }
+    const res = await OrderService.getAllOrder(user?.access_token);
+    return { data: res?.data, key: "orders" };
+  };
 
   const getAllProducts = async () => {
-    const res = await ProductService.getAllProduct()
-    return { data: res?.data, key: 'products' }
-  }
+    const res = await ProductService.getAllProduct();
+    return { data: res?.data, key: "products" };
+  };
 
   const getAllUsers = async () => {
-    const res = await UserService.getAllUser(user?.access_token)
-    return { data: res?.data, key: 'users' }
-  }
+    const res = await UserService.getAllUser(user?.access_token);
+    return { data: res?.data, key: "users" };
+  };
 
   const queries = useQueries({
     queries: [
-      { queryKey: ['products'], queryFn: getAllProducts, staleTime: 1000 * 60 },
-      { queryKey: ['users'], queryFn: getAllUsers, staleTime: 1000 * 60 },
-      { queryKey: ['orders'], queryFn: getAllOrder, staleTime: 1000 * 60 },
-    ]
-  })
+      { queryKey: ["products"], queryFn: getAllProducts, staleTime: 1000 * 60 },
+      { queryKey: ["users"], queryFn: getAllUsers, staleTime: 1000 * 60 },
+      { queryKey: ["orders"], queryFn: getAllOrder, staleTime: 1000 * 60 },
+    ],
+  });
   const memoCount = useMemo(() => {
-    const result = {}
+    const result = {};
     try {
       if (queries) {
         queries.forEach((query) => {
-          result[query?.data?.key] = query?.data?.data?.length
-        })
+          result[query?.data?.key] = query?.data?.data?.length;
+        });
       }
-      return result
+      return result;
     } catch (error) {
-      return result
+      return result;
     }
-  }, [queries])
+  }, [queries]);
   const COLORS = {
-    users: ['#e66465', '#9198e5'],
-    products: ['#a8c0ff', '#3f2b96'],
-    orders: ['#11998e', '#38ef7d'],
+    users: ["#e66465", "#9198e5"],
+    products: ["#a8c0ff", "#3f2b96"],
+    orders: ["#11998e", "#38ef7d"],
   };
   const renderPage = (key) => {
     switch (key) {
-      case 'users':
-        return (
-          <AdminUser />
-        )
-      case 'products':
-        return (
-          <AdminProduct />
-        )
-      case 'orders':
-        return (
-          <OrderAdmin />
-        )
+      case "users":
+        return <AdminUser />;
+      case "products":
+        return <AdminProduct />;
+      case "orders":
+        return <OrderAdmin />;
       default:
-        return <></>
+        return <></>;
     }
-  }
+  };
 
   const handleOnCLick = ({ key }) => {
-    setKeySelected(key)
-  }
+    setKeySelected(key);
+  };
   return (
     <>
       <HeaderComponent isHiddenSearch isHiddenCart />
-      <div style={{ display: 'flex', overflowX: 'hidden' }}>
+      <div style={{ display: "flex", overflowX: "hidden", marginTop: `5%` }}>
         <Menu
           mode="inline"
           style={{
             width: 256,
-            boxShadow: '1px 1px 2px #ccc',
-            height: '100vh'
+            boxShadow: "1px 1px 2px #ccc",
+            height: "100vh",
           }}
           items={items}
           onClick={handleOnCLick}
         />
-        <div style={{ flex: 1, padding: '15px 0 15px 15px' }}>
-          <Loading isLoading={memoCount && Object.keys(memoCount) && Object.keys(memoCount).length !== 3}>
+        <div style={{ flex: 1, padding: "15px 0 15px 15px" }}>
+          <Loading
+            isLoading={
+              memoCount &&
+              Object.keys(memoCount) &&
+              Object.keys(memoCount).length !== 3
+            }
+          >
             {!keySelected && (
-              <CustomizedContent data={memoCount} colors={COLORS} setKeySelected={setKeySelected} />
+              <CustomizedContent
+                data={memoCount}
+                colors={COLORS}
+                setKeySelected={setKeySelected}
+              />
             )}
           </Loading>
           {renderPage(keySelected)}
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default AdminPage
+export default AdminPage;
