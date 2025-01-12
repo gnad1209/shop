@@ -82,6 +82,7 @@ const HomePage = () => {
             height: `${1000 + height}px`,
             width: "1270px",
             margin: `0 auto `,
+            backgroundColor: "#efefef",
           }}
         >
           <SliderComponent max={50} arrImages={[slider1, slider2, slider3]} />

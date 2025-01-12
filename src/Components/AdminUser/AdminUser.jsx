@@ -22,6 +22,7 @@ import {
 } from "@ant-design/icons";
 
 const AdminUser = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [rowSelected, setRowSelected] = useState("");
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
@@ -29,16 +30,16 @@ const AdminUser = () => {
   const user = useSelector((state) => state?.user);
   const searchInput = useRef(null);
   const [image, setImage] = useState("");
-
-  const [stateUserDetails, setStateUserDetails] = useState({
+  const inittial = () => ({
     name: "",
     email: "",
     phone: "",
     isAdmin: false,
-    avatar: "",
     address: "",
+    avatar: "",
   });
 
+  const [stateUserDetails, setStateUserDetails] = useState(inittial());
   const [form] = Form.useForm();
 
   const mutationUpdate = useMutationHooks((data) => {
@@ -86,8 +87,14 @@ const AdminUser = () => {
   };
 
   useEffect(() => {
-    form.setFieldsValue(stateUserDetails);
-  }, [form, stateUserDetails]);
+    if (form && stateUserDetails) {
+      if (!isModalOpen) {
+        form.setFieldsValue(stateUserDetails);
+      } else {
+        form.setFieldsValue(inittial());
+      }
+    }
+  }, [form, stateUserDetails, isModalOpen]);
 
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
@@ -309,6 +316,8 @@ const AdminUser = () => {
       email: "",
       phone: "",
       isAdmin: false,
+      avatar: "",
+      address: "",
     });
     form.resetFields();
   };
@@ -454,6 +463,14 @@ const AdminUser = () => {
                 value={stateUserDetails.address}
                 onChange={handleOnchangeDetails}
                 name="address"
+              />
+            </Form.Item>
+
+            <Form.Item label="admin" name="admin" style={{ display: `none` }}>
+              <InputComponent
+                value={false}
+                onChange={handleOnchangeDetails}
+                name="isAdmin"
               />
             </Form.Item>
 
